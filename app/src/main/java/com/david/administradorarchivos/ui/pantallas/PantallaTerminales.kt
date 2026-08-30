@@ -1,6 +1,7 @@
 package com.david.administradorarchivos.ui.pantallas
 
 import androidx.compose.foundation.background
+import androidx.compose.foundation.horizontalScroll
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.rememberScrollState
 import androidx.compose.foundation.shape.RoundedCornerShape
@@ -25,28 +26,63 @@ import kotlinx.coroutines.withContext
 @Composable
 fun PantallaTerminales() {
     val host by GestorSesion.hostActivo.collectAsState()
-    val estado by GestorSesion.estado.collectAsState()
     var comando by remember { mutableStateOf("") }
-    var historial by remember { mutableStateOf("Sesión lista. Escribe un comando (ls, pwd, whoami…)\n") }
+    var historial by remember {
+        mutableStateOf(
+            Idioma.t(
+                "Sesión lista. Escribe un comando (ls, pwd, whoami…)\n",
+                "Session ready. Type a command (ls, pwd, whoami…)\n"
+            )
+        )
+    }
     var enviando by remember { mutableStateOf(false) }
     val alcance = rememberCoroutineScope()
     val scroll = rememberScrollState()
 
     LaunchedEffect(historial) { scroll.animateScrollTo(scroll.maxValue) }
 
-    Column(Modifier.fillMaxSize().background(FondoApp).padding(16.dp)) {
-        Text("Terminal", style = MaterialTheme.typography.titleLarge, fontWeight = FontWeight.Bold, color = Texto)
-        Text(
-            host?.let { "${it.usuario}@${it.direccion}:${it.puerto}" } ?: "Ningún host conectado",
-            color = if (host != null) VerdeConectado else TextoSuave,
-            style = MaterialTheme.typography.bodyMedium
-        )
-        Spacer(Modifier.height(12.dp))
+    fun enviar(cmd: String) {
+        val texto = cmd.trim()
+        if (texto.isBlank() || host == null || enviando) return
+        enviando = true
+        historial += "\n$ $texto\n"
+        comando = ""
+        alcance.launch {
+            try {
+                val out = withContext(Dispatchers.IO) {
+                    GestorSesion.clienteSftp?.ejecutarComando(texto)
+                        ?: Idioma.t("Sin sesión", "No session")
+                }
+                historial += out + "\n"
+            } catch (e: Exception) {
+                historial += "error: ${e.message}\n"
+            } finally {
+                enviando = false
+            }
+        }
+    }
+
+    Column(Modifier.fillMaxSize().background(FondoApp)) {
+        Column(Modifier.padding(horizontal = 16.dp, vertical = 12.dp)) {
+            Text(
+                Idioma.t("Terminal", "Terminal"),
+                style = MaterialTheme.typography.titleLarge,
+                fontWeight = FontWeight.Bold,
+                color = Texto
+            )
+            Text(
+                host?.let { "${it.usuario}@${it.direccion}:${it.puerto}" }
+                    ?: Idioma.t("Ninguna sesión conectada", "No session connected"),
+                color = if (host != null) VerdeConectado else TextoSuave,
+                style = MaterialTheme.typography.bodyMedium
+            )
+        }
 
         Box(
             Modifier
                 .weight(1f)
                 .fillMaxWidth()
+                .padding(horizontal = 12.dp)
                 .clip(RoundedCornerShape(12.dp))
                 .background(androidx.compose.ui.graphics.Color(0xFF0B0D12))
                 .padding(12.dp)
@@ -60,45 +96,66 @@ fun PantallaTerminales() {
             )
         }
 
-        Spacer(Modifier.height(10.dp))
-        Row(verticalAlignment = Alignment.CenterVertically) {
+        Row(
+            Modifier
+                .fillMaxWidth()
+                .horizontalScroll(rememberScrollState())
+                .padding(horizontal = 10.dp, vertical = 8.dp),
+            horizontalArrangement = Arrangement.spacedBy(6.dp)
+        ) {
+            listOf(
+                "tab" to "\t",
+                "esc" to "",
+                "ctrl" to "",
+                "alt" to "",
+                "/" to "/",
+                "|" to "|",
+                "-" to "-",
+                "~" to "~"
+            ).forEach { (etiqueta, inserta) ->
+                AssistChip(
+                    onClick = {
+                        if (inserta.isNotEmpty()) comando += inserta
+                    },
+                    label = { Text(etiqueta, fontFamily = FontFamily.Monospace, fontSize = 12.sp) },
+                    colors = AssistChipDefaults.assistChipColors(
+                        containerColor = FondoTarjeta,
+                        labelColor = VerdeConectado
+                    )
+                )
+            }
+        }
+
+        Row(
+            Modifier.padding(horizontal = 12.dp, vertical = 8.dp),
+            verticalAlignment = Alignment.CenterVertically
+        ) {
             OutlinedTextField(
                 value = comando,
                 onValueChange = { comando = it },
                 modifier = Modifier.weight(1f),
-                placeholder = { Text("comando") },
+                placeholder = { Text(Idioma.t("comando", "command")) },
                 singleLine = true,
                 enabled = host != null && !enviando,
                 shape = RoundedCornerShape(12.dp)
             )
             Spacer(Modifier.width(8.dp))
             FloatingActionButton(
-                onClick = {
-                    val cmd = comando.trim()
-                    if (cmd.isBlank() || host == null) return@FloatingActionButton
-                    enviando = true
-                    historial += "\n$ ${cmd}\n"
-                    comando = ""
-                    alcance.launch {
-                        try {
-                            val out = withContext(Dispatchers.IO) {
-                                GestorSesion.clienteSftp?.ejecutarComando(cmd) ?: "Sin sesión"
-                            }
-                            historial += out + "\n"
-                        } catch (e: Exception) {
-                            historial += "error: ${e.message}\n"
-                        } finally {
-                            enviando = false
-                        }
-                    }
-                },
+                onClick = { enviar(comando) },
                 containerColor = AzulAccion,
                 modifier = Modifier.size(52.dp)
-            ) { Icon(Icons.Filled.Send, contentDescription = "Enviar") }
+            ) { Icon(Icons.Filled.Send, contentDescription = Idioma.t("Enviar", "Send")) }
         }
         if (host == null) {
-            Spacer(Modifier.height(8.dp))
-            Text("Ve a Hosts, crea un servidor y tócalo para conectar.", color = TextoSuave)
+            Text(
+                Idioma.t(
+                    "Ve a Sesiones, pulsa Nueva sesión y luego toca la tarjeta para conectar.",
+                    "Go to Sessions, tap New session, then tap the card to connect."
+                ),
+                color = TextoSuave,
+                modifier = Modifier.padding(horizontal = 16.dp, vertical = 4.dp)
+            )
         }
+        Spacer(Modifier.height(4.dp))
     }
 }
