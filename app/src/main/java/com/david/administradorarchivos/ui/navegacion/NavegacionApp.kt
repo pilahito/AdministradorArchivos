@@ -23,43 +23,37 @@ import com.david.administradorarchivos.ui.pantallas.PantallaAjustes
 import com.david.administradorarchivos.ui.pantallas.PantallaHosts
 import com.david.administradorarchivos.ui.pantallas.PantallaSftp
 import com.david.administradorarchivos.ui.pantallas.PantallaTerminales
-
-private data class Destino(val ruta: String, val titulo: String)
-
-private val DESTINOS = listOf(
-    Destino("hosts", "Hosts"),
-    Destino("terminales", "Terminal"),
-    Destino("sftp", "SFTP"),
-    Destino("ajustes", "Ajustes")
-)
+import com.david.administradorarchivos.ui.theme.Idioma
 
 @Composable
 fun NavegacionPrincipal() {
     val nav = rememberNavController()
     val entrada by nav.currentBackStackEntryAsState()
     val ruta = entrada?.destination?.route
+    val es = Idioma.espanol
+
+    val destinos = listOf(
+        Triple("hosts", Idioma.t("Sesiones", "Sessions"), Icons.Filled.Dns),
+        Triple("terminales", Idioma.t("Terminal", "Terminal"), Icons.Filled.Terminal),
+        Triple("sftp", "SFTP", Icons.Filled.Folder),
+        Triple("ajustes", Idioma.t("Ajustes", "Settings"), Icons.Filled.Settings)
+    )
 
     Scaffold(
         bottomBar = {
             NavigationBar {
-                DESTINOS.forEach { d ->
-                    val icono = when (d.ruta) {
-                        "hosts" -> Icons.Filled.Dns
-                        "terminales" -> Icons.Filled.Terminal
-                        "sftp" -> Icons.Filled.Folder
-                        else -> Icons.Filled.Settings
-                    }
+                destinos.forEach { d ->
                     NavigationBarItem(
-                        selected = ruta == d.ruta,
+                        selected = ruta == d.first,
                         onClick = {
-                            nav.navigate(d.ruta) {
+                            nav.navigate(d.first) {
                                 popUpTo(nav.graph.findStartDestination().id) { saveState = true }
                                 launchSingleTop = true
                                 restoreState = true
                             }
                         },
-                        icon = { Icon(icono, contentDescription = d.titulo) },
-                        label = { Text(d.titulo) }
+                        icon = { Icon(d.third, contentDescription = d.second) },
+                        label = { Text(d.second) }
                     )
                 }
             }
@@ -76,4 +70,7 @@ fun NavegacionPrincipal() {
             composable("ajustes") { PantallaAjustes() }
         }
     }
+    // lee `es` para recomponer al cambiar idioma
+    @Suppress("UNUSED_VARIABLE")
+    val _recompone = es
 }

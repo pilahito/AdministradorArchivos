@@ -2,9 +2,11 @@ package com.david.administradorarchivos.ui.pantallas
 
 import androidx.compose.foundation.background
 import androidx.compose.foundation.clickable
+import androidx.compose.foundation.horizontalScroll
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.items
+import androidx.compose.foundation.rememberScrollState
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.foundation.text.KeyboardActions
 import androidx.compose.foundation.text.KeyboardOptions
@@ -13,6 +15,7 @@ import androidx.compose.material.icons.filled.Add
 import androidx.compose.material.icons.filled.Delete
 import androidx.compose.material.icons.filled.Dns
 import androidx.compose.material.icons.filled.Search
+import androidx.compose.material.icons.filled.UploadFile
 import androidx.compose.material3.*
 import androidx.compose.runtime.*
 import androidx.compose.ui.Alignment
@@ -75,7 +78,7 @@ fun PantallaHosts(onAbrirTerminal: () -> Unit) {
     val ctx = LocalContext.current
     val teclado = LocalSoftwareKeyboardController.current
     val almacen = remember { AlmacenHosts(ctx) }
-    var hosts by remember { mutableStateOf(almacen.listar()) }
+    var sesiones by remember { mutableStateOf(almacen.listar()) }
     var busqueda by remember { mutableStateOf("") }
     var mostrarNuevo by remember { mutableStateOf(false) }
     var prefill by remember { mutableStateOf(ConexionRapida()) }
@@ -84,13 +87,13 @@ fun PantallaHosts(onAbrirTerminal: () -> Unit) {
     val alcance = rememberCoroutineScope()
     val estado by GestorSesion.estado.collectAsState()
 
-    val filtrados = hosts.filter {
+    val filtrados = sesiones.filter {
         val q = busqueda.lowercase()
         q.isBlank() || it.alias.lowercase().contains(q) || it.direccion.lowercase().contains(q) ||
             it.usuario.lowercase().contains(q)
     }
 
-    fun refrescar() { hosts = almacen.listar() }
+    fun refrescar() { sesiones = almacen.listar() }
 
     fun abrirFormulario() {
         teclado?.hide()
@@ -106,7 +109,10 @@ fun PantallaHosts(onAbrirTerminal: () -> Unit) {
                 withContext(Dispatchers.IO) { GestorSesion.conectar(h) }
                 onAbrirTerminal()
             } catch (e: Exception) {
-                error = e.message ?: "No se pudo conectar. Revisa IP, puerto, usuario y contraseña."
+                error = e.message ?: Idioma.t(
+                    "No se pudo conectar. Revisa IP, puerto, usuario y contraseña.",
+                    "Could not connect. Check IP, port, user and password."
+                )
             } finally {
                 conectando = false
             }
@@ -115,30 +121,55 @@ fun PantallaHosts(onAbrirTerminal: () -> Unit) {
 
     Box(Modifier.fillMaxSize().background(FondoApp)) {
         Column(Modifier.fillMaxSize().padding(horizontal = 16.dp, vertical = 12.dp)) {
-            Text("Hosts", style = MaterialTheme.typography.titleLarge, fontWeight = FontWeight.Bold, color = Texto)
             Text(
-                if (conectando) "Conectando…" else estado,
+                Idioma.t("Sesiones", "Sessions"),
+                style = MaterialTheme.typography.titleLarge,
+                fontWeight = FontWeight.Bold,
+                color = Texto
+            )
+            Text(
+                if (conectando) Idioma.t("Conectando…", "Connecting…") else estado,
                 style = MaterialTheme.typography.bodyMedium,
-                color = if (estado.startsWith("Conectado")) VerdeConectado else TextoSuave
+                color = if (estado.startsWith("Conectado") || estado.startsWith("Connected")) VerdeConectado else TextoSuave
             )
             Spacer(Modifier.height(12.dp))
             OutlinedTextField(
                 value = busqueda,
                 onValueChange = { busqueda = it },
                 modifier = Modifier.fillMaxWidth(),
-                placeholder = { Text("ssh user@192.168.0.250 -p 2220") },
+                placeholder = { Text(Idioma.t("Buscar sesión o ssh usuario@ip", "Search session or ssh user@host")) },
                 leadingIcon = { Icon(Icons.Filled.Search, null) },
                 singleLine = true,
                 shape = RoundedCornerShape(14.dp),
                 keyboardOptions = KeyboardOptions(imeAction = ImeAction.Go),
                 keyboardActions = KeyboardActions(onGo = { abrirFormulario() })
             )
-            Text(
-                "Escribe la IP y pulsa +  ·  La barra sola no conecta",
-                color = TextoSuave,
-                style = MaterialTheme.typography.bodySmall,
-                modifier = Modifier.padding(top = 6.dp)
-            )
+            Spacer(Modifier.height(10.dp))
+            Row(
+                Modifier.horizontalScroll(rememberScrollState()),
+                horizontalArrangement = Arrangement.spacedBy(8.dp),
+                verticalAlignment = Alignment.CenterVertically
+            ) {
+                Button(
+                    onClick = { abrirFormulario() },
+                    colors = ButtonDefaults.buttonColors(containerColor = Chip, contentColor = Texto),
+                    shape = RoundedCornerShape(20.dp),
+                    contentPadding = PaddingValues(horizontal = 14.dp, vertical = 8.dp)
+                ) {
+                    Icon(Icons.Filled.Add, null, Modifier.size(16.dp))
+                    Spacer(Modifier.width(4.dp))
+                    Text(Idioma.t("Nueva sesión", "New session"))
+                }
+                OutlinedButton(
+                    onClick = { abrirFormulario() },
+                    shape = RoundedCornerShape(20.dp),
+                    contentPadding = PaddingValues(horizontal = 14.dp, vertical = 8.dp)
+                ) {
+                    Icon(Icons.Filled.UploadFile, null, Modifier.size(16.dp))
+                    Spacer(Modifier.width(4.dp))
+                    Text(Idioma.t("Importar", "Import"))
+                }
+            }
             Spacer(Modifier.height(8.dp))
             error?.let { Text(it, color = Rojo, style = MaterialTheme.typography.bodyMedium) }
 
@@ -147,14 +178,18 @@ fun PantallaHosts(onAbrirTerminal: () -> Unit) {
                     Column(horizontalAlignment = Alignment.CenterHorizontally) {
                         Icon(Icons.Filled.Dns, null, tint = TextoSuave, modifier = Modifier.size(48.dp))
                         Spacer(Modifier.height(8.dp))
-                        Text("No hay hosts", color = TextoSuave)
-                        Text("Pulsa + y rellena IP + usuario", color = TextoSuave, style = MaterialTheme.typography.bodyMedium)
+                        Text(Idioma.t("No hay sesiones", "No sessions"), color = TextoSuave)
+                        Text(
+                            Idioma.t("Pulsa Nueva sesión para crear una", "Tap New session to create one"),
+                            color = TextoSuave,
+                            style = MaterialTheme.typography.bodyMedium
+                        )
                     }
                 }
             } else {
                 LazyColumn(verticalArrangement = Arrangement.spacedBy(8.dp), modifier = Modifier.fillMaxSize()) {
                     items(filtrados, key = { it.id }) { h ->
-                        TarjetaHost(
+                        TarjetaSesion(
                             host = h,
                             onClick = { conectar(h) },
                             onBorrar = {
@@ -173,11 +208,11 @@ fun PantallaHosts(onAbrirTerminal: () -> Unit) {
             modifier = Modifier.align(Alignment.BottomEnd).padding(20.dp),
             containerColor = VerdeFab,
             contentColor = FondoApp
-        ) { Icon(Icons.Filled.Add, contentDescription = "Nuevo host") }
+        ) { Icon(Icons.Filled.Add, contentDescription = Idioma.t("Nueva sesión", "New session")) }
     }
 
     if (mostrarNuevo) {
-        DialogoNuevoHost(
+        DialogoNuevaSesion(
             inicial = prefill,
             onCerrar = { mostrarNuevo = false },
             onGuardar = {
@@ -191,7 +226,7 @@ fun PantallaHosts(onAbrirTerminal: () -> Unit) {
 }
 
 @Composable
-private fun TarjetaHost(host: HostGuardado, onClick: () -> Unit, onBorrar: () -> Unit) {
+private fun TarjetaSesion(host: HostGuardado, onClick: () -> Unit, onBorrar: () -> Unit) {
     val color = ColoresHost[kotlin.math.abs(host.color) % ColoresHost.size]
     Row(
         Modifier
@@ -210,7 +245,11 @@ private fun TarjetaHost(host: HostGuardado, onClick: () -> Unit, onBorrar: () ->
         }
         Spacer(Modifier.width(12.dp))
         Column(Modifier.weight(1f)) {
-            Text(host.alias.ifBlank { host.direccion }, color = Texto, fontWeight = FontWeight.SemiBold)
+            Text(
+                host.alias.ifBlank { host.direccion },
+                color = Texto,
+                fontWeight = FontWeight.SemiBold
+            )
             Text(
                 "${host.protocolo.lowercase()} · ${host.usuario} · ${host.direccion}:${host.puerto}",
                 color = TextoSuave,
@@ -218,19 +257,19 @@ private fun TarjetaHost(host: HostGuardado, onClick: () -> Unit, onBorrar: () ->
             )
         }
         IconButton(onClick = onBorrar) {
-            Icon(Icons.Filled.Delete, contentDescription = "Borrar", tint = TextoSuave)
+            Icon(Icons.Filled.Delete, contentDescription = Idioma.t("Borrar", "Delete"), tint = TextoSuave)
         }
     }
 }
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
-private fun DialogoNuevoHost(
+private fun DialogoNuevaSesion(
     inicial: ConexionRapida,
     onCerrar: () -> Unit,
     onGuardar: (HostGuardado) -> Unit
 ) {
-    var alias by remember { mutableStateOf(inicial.direccion) }
+    var alias by remember { mutableStateOf("") }
     var dir by remember { mutableStateOf(inicial.direccion) }
     var puerto by remember { mutableStateOf(inicial.puerto.toString()) }
     var user by remember { mutableStateOf(inicial.usuario) }
@@ -241,23 +280,47 @@ private fun DialogoNuevoHost(
 
     AlertDialog(
         onDismissRequest = onCerrar,
-        title = { Text("Nuevo host") },
+        title = { Text(Idioma.t("Nueva sesión", "New session")) },
         text = {
             Column(verticalArrangement = Arrangement.spacedBy(8.dp)) {
                 aviso?.let { Text(it, color = Rojo) }
-                OutlinedTextField(alias, { alias = it }, label = { Text("Nombre") }, singleLine = true, modifier = Modifier.fillMaxWidth())
-                OutlinedTextField(dir, { dir = it }, label = { Text("IP o hostname (obligatorio)") }, singleLine = true, modifier = Modifier.fillMaxWidth())
-                OutlinedTextField(puerto, { puerto = it }, label = { Text("Puerto") }, singleLine = true, modifier = Modifier.fillMaxWidth())
-                OutlinedTextField(user, { user = it }, label = { Text("Usuario (obligatorio)") }, singleLine = true, modifier = Modifier.fillMaxWidth())
                 OutlinedTextField(
-                    pass,
-                    { pass = it },
-                    label = { Text("Contraseña") },
+                    alias, { alias = it },
+                    label = { Text(Idioma.t("Nombre de la sesión (opcional)", "Session name (optional)")) },
+                    singleLine = true,
+                    modifier = Modifier.fillMaxWidth()
+                )
+                OutlinedTextField(
+                    dir, { dir = it },
+                    label = { Text(Idioma.t("IP o hostname", "IP or hostname")) },
+                    singleLine = true,
+                    modifier = Modifier.fillMaxWidth()
+                )
+                OutlinedTextField(
+                    puerto, { puerto = it },
+                    label = { Text(Idioma.t("Puerto", "Port")) },
+                    singleLine = true,
+                    modifier = Modifier.fillMaxWidth()
+                )
+                OutlinedTextField(
+                    user, { user = it },
+                    label = { Text(Idioma.t("Usuario", "Username")) },
+                    singleLine = true,
+                    modifier = Modifier.fillMaxWidth()
+                )
+                OutlinedTextField(
+                    pass, { pass = it },
+                    label = { Text(Idioma.t("Contraseña", "Password")) },
                     singleLine = true,
                     modifier = Modifier.fillMaxWidth(),
                     visualTransformation = PasswordVisualTransformation()
                 )
-                OutlinedTextField(clave, { clave = it }, label = { Text("Ruta clave SSH (opcional)") }, singleLine = true, modifier = Modifier.fillMaxWidth())
+                OutlinedTextField(
+                    clave, { clave = it },
+                    label = { Text(Idioma.t("Ruta clave SSH (opcional)", "SSH key path (optional)")) },
+                    singleLine = true,
+                    modifier = Modifier.fillMaxWidth()
+                )
                 Row(horizontalArrangement = Arrangement.spacedBy(8.dp)) {
                     listOf("SSH", "SFTP", "FTP").forEach { p ->
                         FilterChip(selected = proto == p, onClick = { proto = p }, label = { Text(p) })
@@ -269,11 +332,11 @@ private fun DialogoNuevoHost(
             TextButton(
                 onClick = {
                     when {
-                        dir.isBlank() -> aviso = "Falta la IP o el hostname"
-                        user.isBlank() -> aviso = "Falta el usuario"
+                        dir.isBlank() -> aviso = Idioma.t("Falta la IP o el hostname", "IP or hostname is required")
+                        user.isBlank() -> aviso = Idioma.t("Falta el usuario", "Username is required")
                         else -> onGuardar(
                             HostGuardado(
-                                alias = alias.ifBlank { dir },
+                                alias = alias.ifBlank { dir.trim() },
                                 direccion = dir.trim(),
                                 puerto = puerto.toIntOrNull() ?: 22,
                                 usuario = user.trim(),
@@ -286,8 +349,8 @@ private fun DialogoNuevoHost(
                         )
                     }
                 }
-            ) { Text("Guardar") }
+            ) { Text(Idioma.t("Guardar", "Save")) }
         },
-        dismissButton = { TextButton(onClick = onCerrar) { Text("Cancelar") } }
+        dismissButton = { TextButton(onClick = onCerrar) { Text(Idioma.t("Cancelar", "Cancel")) } }
     )
 }
