@@ -51,6 +51,16 @@ fun NavegacionPrincipal() {
         alcance.launch { drawer.close() }
     }
 
+    val titulo = when (ruta) {
+        "hosts" -> Idioma.t("Sesiones", "Sessions")
+        "terminales" -> "Terminal"
+        "sftp" -> "SFTP"
+        "snippets" -> "Snippets"
+        "tuneles" -> Idioma.t("Túneles", "Tunnels")
+        "ajustes" -> Idioma.t("Ajustes", "Settings")
+        else -> "CyberTerm"
+    }
+
     val destinosBarra = listOf(
         Triple("hosts", Idioma.t("Sesiones", "Sessions"), Icons.Filled.Dns),
         Triple("terminales", Idioma.t("Terminal", "Terminal"), Icons.Filled.Terminal),
@@ -63,7 +73,7 @@ fun NavegacionPrincipal() {
         drawerContent = {
             ModalDrawerSheet(drawerContainerColor = FondoApp) {
                 Spacer(Modifier.height(18.dp))
-                Text("Sesiones", style = MaterialTheme.typography.titleLarge, modifier = Modifier.padding(16.dp))
+                Text("CyberTerm", style = MaterialTheme.typography.titleLarge, modifier = Modifier.padding(16.dp))
                 NavigationDrawerItem(
                     label = { Text(Idioma.t("Sesiones", "Sessions")) },
                     selected = ruta == "hosts",
@@ -106,7 +116,7 @@ fun NavegacionPrincipal() {
         Scaffold(
             topBar = {
                 TopAppBar(
-                    title = { Text("Sesiones") },
+                    title = { Text(titulo) },
                     navigationIcon = {
                         IconButton(onClick = { alcance.launch { drawer.open() } }) {
                             Icon(Icons.Filled.Menu, contentDescription = "Menú")
