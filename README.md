@@ -1,56 +1,55 @@
 # Sesiones
 
-Cliente **SSH / SFTP / Google Drive** para Android.
-Es **nuestra versión**, no Termius: mismas ideas (sesiones, terminal, archivos), sin pago ni cuenta obligatoria.
+Suite **open source** de administración remota para Android:
+SSH, terminal, SFTP, túneles, snippets y llavero.
+
+No es Termius. No hay pago ni telemetría comercial.
 
 [![Compilar APK](https://github.com/pilahito/AdministradorArchivos/actions/workflows/compilar-apk.yml/badge.svg)](https://github.com/pilahito/AdministradorArchivos/actions/workflows/compilar-apk.yml)
 [![Releases](https://img.shields.io/github/v/release/pilahito/AdministradorArchivos?include_prereleases)](https://github.com/pilahito/AdministradorArchivos/releases)
 
 **Paquete:** `com.david.administradorarchivos`  
-**Android:** 8.0+ (API 26)
+**Android 8+** · paleta Slate / cian / esmeralda
 
 ---
 
-## Descargar APK
+## Descargar
 
-1. Entra a **[Releases](https://github.com/pilahito/AdministradorArchivos/releases)**
-2. Abre la versión de arriba (**Latest**)
-3. Baja `Hosts-debug.apk`
-4. En el teléfono: permite *orígenes desconocidos* e instala
+https://github.com/pilahito/AdministradorArchivos/releases
 
-Cada push a `main` compila un APK y lo publica en Releases.
+Instala `Hosts-debug.apk` (permite orígenes desconocidos).
 
 ---
 
-## Qué incluye (todo gratis)
+## Qué hay ahora
 
-| Apartado | Qué hace |
+| Módulo | Qué hace |
 |---|---|
-| **Sesiones** | Lista vacía al inicio. Botón **Nueva sesión** para crear la tuya |
-| **Terminal** | Comandos SSH + barra tab / esc / ctrl |
-| **SFTP** | Archivos del servidor conectado |
-| **Ajustes** | Español/English, llavero SSH, Google Drive OAuth |
+| Sesiones | Crear / guardar / conectar hosts |
+| Terminal | Comandos SSH + teclas tab/esc/ctrl |
+| SFTP | Listar archivos del servidor |
+| Snippets | Comandos de un toque |
+| Túneles | Reenvío local `-L` con SSHJ |
+| Ajustes | Idioma, llavero, Google Drive |
 
-No hay hosts de ejemplo. Tú pones el nombre de cada sesión.
+Librerías reales: **JSch**, **SSHJ**, **Room**, Commons Net.  
+No se copia Termux ni Material Files (GPL).
 
----
-
-## Google Drive
-
-1. Proyecto en [Google Cloud Console](https://console.cloud.google.com)
-2. Activa **Google Drive API**
-3. Pantalla de consentimiento OAuth + tu Gmail de prueba
-4. Credenciales → **ID de cliente OAuth** → tipo **Android**
-
-| Campo | Valor |
-|---|---|
-| Paquete | `com.david.administradorarchivos` |
-| SHA-1 | el de este APK: `keytool -printcert -jarfile Hosts-debug.apk` |
+Detalle: [docs/LIBRERIAS.md](docs/LIBRERIAS.md) · [docs/ARQUITECTURA.md](docs/ARQUITECTURA.md)
 
 ---
 
-## Limitaciones
+## Qué no entra en este APK
 
-- Terminal: un comando → una respuesta (no `vim` / `htop` interactivo)
-- APK de **debug** (pruebas, no Play Store)
-- No es Termius ni desbloquea Termius Pro
+- Emulador VT100 de Termux
+- Doble panel de Material Files
+- SQLCipher nativo / SMB / S3 (siguiente bloque)
+- ServerBox (es Flutter)
+
+---
+
+## Uso rápido
+
+1. **Nueva sesión** → IP, puerto, usuario, contraseña
+2. Toca la tarjeta → Terminal
+3. Menú ☰ → Snippets o Túneles
