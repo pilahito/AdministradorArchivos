@@ -1,55 +1,32 @@
 # Sesiones
 
-Suite **open source** de administración remota para Android:
-SSH, terminal, SFTP, túneles, snippets y llavero.
+Cliente SSH / SFTP / túneles para Android. Open source, sin pago.
+Logo: cubo terminal verde.
 
-No es Termius. No hay pago ni telemetría comercial.
+[![APK](https://github.com/pilahito/AdministradorArchivos/actions/workflows/compilar-apk.yml/badge.svg)](https://github.com/pilahito/AdministradorArchivos/actions)
 
-[![Compilar APK](https://github.com/pilahito/AdministradorArchivos/actions/workflows/compilar-apk.yml/badge.svg)](https://github.com/pilahito/AdministradorArchivos/actions/workflows/compilar-apk.yml)
-[![Releases](https://img.shields.io/github/v/release/pilahito/AdministradorArchivos?include_prereleases)](https://github.com/pilahito/AdministradorArchivos/releases)
+**Descarga:** [Releases](https://github.com/pilahito/AdministradorArchivos/releases) → `Hosts-debug.apk`
 
-**Paquete:** `com.david.administradorarchivos`  
-**Android 8+** · paleta Slate / cian / esmeralda
+## Pantallas
 
----
+- Sesiones — crea la tuya (no hay hosts de ejemplo)
+- Terminal — comandos SSH
+- SFTP — archivos del servidor
+- Snippets / Túneles `-L` — menú ☰
+- Ajustes — idioma y Drive
 
-## Descargar
+## Motores
 
-https://github.com/pilahito/AdministradorArchivos/releases
-
-Instala `Hosts-debug.apk` (permite orígenes desconocidos).
-
----
-
-## Qué hay ahora
-
-| Módulo | Qué hace |
+| Uso | Librería |
 |---|---|
-| Sesiones | Crear / guardar / conectar hosts |
-| Terminal | Comandos SSH + teclas tab/esc/ctrl |
-| SFTP | Listar archivos del servidor |
-| Snippets | Comandos de un toque |
-| Túneles | Reenvío local `-L` con SSHJ |
-| Ajustes | Idioma, llavero, Google Drive |
+| SSH / SFTP | JSch (`mwiede`) |
+| Túneles / SSH2 | SSHJ |
+| Bóveda | Room |
 
-Librerías reales: **JSch**, **SSHJ**, **Room**, Commons Net.  
-No se copia Termux ni Material Files (GPL).
+Termux, ConnectBot y Material Files **no se copian**. Ver [docs/FUENTES.md](docs/FUENTES.md).
 
-Detalle: [docs/LIBRERIAS.md](docs/LIBRERIAS.md) · [docs/ARQUITECTURA.md](docs/ARQUITECTURA.md)
+## Uso
 
----
-
-## Qué no entra en este APK
-
-- Emulador VT100 de Termux
-- Doble panel de Material Files
-- SQLCipher nativo / SMB / S3 (siguiente bloque)
-- ServerBox (es Flutter)
-
----
-
-## Uso rápido
-
-1. **Nueva sesión** → IP, puerto, usuario, contraseña
-2. Toca la tarjeta → Terminal
-3. Menú ☰ → Snippets o Túneles
+1. Nueva sesión → IP, puerto, usuario, contraseña
+2. Toca la tarjeta
+3. Terminal o SFTP

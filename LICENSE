@@ -1,0 +1,11 @@
+GNU GENERAL PUBLIC LICENSE
+Version 3, 29 June 2007
+
+This project is licensed under GPL-3.0-or-later so it can link against
+GPL components such as Termux terminal-view / terminal-emulator if they
+are added later as libraries.
+
+SSHJ and JSch remain Apache-2.0 dependencies.
+Do not copy Termius proprietary source or assets.
+
+Full GPL-3.0 text: https://www.gnu.org/licenses/gpl-3.0.html
