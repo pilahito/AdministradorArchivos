@@ -37,17 +37,19 @@ fun PantallaAjustes() {
     var info by remember { mutableStateOf<String?>(null) }
 
     val launcher = rememberLauncherForActivityResult(ActivityResultContracts.StartActivityForResult()) { res ->
-        if (res.resultCode == Activity.RESULT_OK) {
-            alcance.launch {
-                try {
-                    val cuenta = GoogleSignIn.getSignedInAccountFromIntent(res.data).getResult(ApiException::class.java)
-                    clienteDrive.conectarConCuenta(cuenta)
-                    email = cuenta.email
-                    val archivos = withContext(Dispatchers.IO) { clienteDrive.listarArchivos() }
-                    info = "Drive: ${archivos.size} archivos en Mi unidad"
-                } catch (e: Exception) {
-                    info = e.message
-                }
+        if (res.resultCode != Activity.RESULT_OK) {
+            info = "Login cancelado o el Client ID Android no está creado en Google Cloud (paquete + SHA-1)."
+            return@rememberLauncherForActivityResult
+        }
+        alcance.launch {
+            try {
+                val cuenta = GoogleSignIn.getSignedInAccountFromIntent(res.data).getResult(ApiException::class.java)
+                clienteDrive.conectarConCuenta(cuenta)
+                email = cuenta.email
+                val archivos = withContext(Dispatchers.IO) { clienteDrive.listarArchivos() }
+                info = "Drive: ${archivos.size} archivos en Mi unidad"
+            } catch (e: Exception) {
+                info = e.message ?: "No se pudo entrar en Drive"
             }
         }
     }
@@ -69,7 +71,7 @@ fun PantallaAjustes() {
                 }
                 Spacer(Modifier.height(8.dp))
                 Text(
-                    "Conexión por pantalla de permisos de Google (OAuth). No se guarda la contraseña.",
+                    "Conexión por pantalla de permisos de Google (OAuth). Sin Client ID Android en Google Cloud el login se cierra solo.",
                     color = TextoSuave,
                     style = MaterialTheme.typography.bodyMedium
                 )
