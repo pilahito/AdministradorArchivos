@@ -1,10 +1,13 @@
 name: Compilar APK
 
-# Se dispara en cada push a main y también a mano desde Actions.
 on:
   push:
     branches: [ "main" ]
+    tags: [ "v*" ]
   workflow_dispatch:
+
+permissions:
+  contents: write
 
 jobs:
   compilar:
@@ -27,10 +30,33 @@ jobs:
       - name: Compilar APK debug
         run: gradle assembleDebug --no-daemon --stacktrace
 
-      - name: Subir APK
+      - name: Preparar APK para descargar
+        run: |
+          mkdir -p dist
+          cp app/build/outputs/apk/debug/app-debug.apk dist/Hosts-debug.apk
+
+      - name: Subir APK (Actions)
         uses: actions/upload-artifact@v4
         with:
           name: administrador-archivos-apk
-          path: app/build/outputs/apk/debug/app-debug.apk
+          path: dist/Hosts-debug.apk
           if-no-files-found: error
           retention-days: 14
+
+      - name: Publicar Release
+        uses: softprops/action-gh-release@v2
+        with:
+          tag_name: ${{ github.ref_type == 'tag' && github.ref_name || format('v0.1.{0}', github.run_number) }}
+          name: Hosts ${{ github.ref_type == 'tag' && github.ref_name || format('v0.1.{0}', github.run_number) }}
+          body: |
+            ## Qué hay en este update
+            APK debug listo para instalar en el teléfono.
+
+            1. Descarga **Hosts-debug.apk**
+            2. Permite orígenes desconocidos
+            3. Instala
+
+            Compilado desde `${{ github.sha }}`.
+          files: dist/Hosts-debug.apk
+          generate_release_notes: true
+          make_latest: true
