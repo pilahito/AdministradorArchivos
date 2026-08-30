@@ -1,5 +1,6 @@
 name: Compilar APK
 
+# Se dispara en cada push a main y también a mano desde Actions.
 on:
   push:
     branches: [ "main" ]
@@ -9,23 +10,27 @@ jobs:
   compilar:
     runs-on: ubuntu-latest
     steps:
-      - name: Descargar código del repositorio
+      - name: Descargar código
         uses: actions/checkout@v4
 
-      - name: Configurar JDK 17
+      - name: JDK 17
         uses: actions/setup-java@v4
         with:
           distribution: temurin
           java-version: "17"
 
-      - name: Configurar Gradle
+      - name: Gradle 8.7
         uses: gradle/actions/setup-gradle@v4
+        with:
+          gradle-version: "8.7"
 
-      - name: Compilar APK de depuración
-        run: gradle assembleDebug --no-daemon
+      - name: Compilar APK debug
+        run: gradle assembleDebug --no-daemon --stacktrace
 
-      - name: Publicar el APK como artefacto descargable
+      - name: Subir APK
         uses: actions/upload-artifact@v4
         with:
           name: administrador-archivos-apk
           path: app/build/outputs/apk/debug/app-debug.apk
+          if-no-files-found: error
+          retention-days: 14

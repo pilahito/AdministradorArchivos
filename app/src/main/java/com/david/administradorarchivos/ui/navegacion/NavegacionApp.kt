@@ -1,69 +1,79 @@
 package com.david.administradorarchivos.ui.navegacion
 
+import androidx.compose.foundation.layout.padding
 import androidx.compose.material.icons.Icons
-import androidx.compose.material.icons.filled.Code
+import androidx.compose.material.icons.filled.Dns
 import androidx.compose.material.icons.filled.Folder
-import androidx.compose.material.icons.filled.Wifi
-import androidx.compose.material3.*
-import androidx.compose.runtime.*
+import androidx.compose.material.icons.filled.Settings
+import androidx.compose.material.icons.filled.Terminal
+import androidx.compose.material3.Icon
+import androidx.compose.material3.NavigationBar
+import androidx.compose.material3.NavigationBarItem
+import androidx.compose.material3.Scaffold
+import androidx.compose.material3.Text
+import androidx.compose.runtime.Composable
+import androidx.compose.runtime.getValue
 import androidx.compose.ui.Modifier
-import androidx.navigation.NavHostController
+import androidx.navigation.NavGraph.Companion.findStartDestination
 import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
 import androidx.navigation.compose.currentBackStackEntryAsState
 import androidx.navigation.compose.rememberNavController
-import com.david.administradorarchivos.ui.pantallas.PantallaAlmacenamiento
-import com.david.administradorarchivos.ui.pantallas.PantallaConexiones
-import com.david.administradorarchivos.ui.pantallas.PantallaEditorCodigo
+import com.david.administradorarchivos.ui.pantallas.PantallaAjustes
+import com.david.administradorarchivos.ui.pantallas.PantallaHosts
+import com.david.administradorarchivos.ui.pantallas.PantallaSftp
+import com.david.administradorarchivos.ui.pantallas.PantallaTerminales
 
-sealed class Pestana(val ruta: String, val titulo: String) {
-    object Almacenamiento : Pestana("almacenamiento", "Archivos")
-    object Conexiones : Pestana("conexiones", "Hosts")
-    object Editor : Pestana("editor", "Editor")
-}
+private data class Destino(val ruta: String, val titulo: String)
 
-private val PESTANAS = listOf(Pestana.Almacenamiento, Pestana.Conexiones, Pestana.Editor)
+private val DESTINOS = listOf(
+    Destino("hosts", "Hosts"),
+    Destino("terminales", "Terminal"),
+    Destino("sftp", "SFTP"),
+    Destino("ajustes", "Ajustes")
+)
 
 @Composable
 fun NavegacionPrincipal() {
-    val controladorNav: NavHostController = rememberNavController()
+    val nav = rememberNavController()
+    val entrada by nav.currentBackStackEntryAsState()
+    val ruta = entrada?.destination?.route
 
     Scaffold(
         bottomBar = {
             NavigationBar {
-                val entradaActual by controladorNav.currentBackStackEntryAsState()
-                val rutaActual = entradaActual?.destination?.route
-
-                PESTANAS.forEach { pestana ->
-                    val icono = when (pestana) {
-                        Pestana.Almacenamiento -> Icons.Filled.Folder
-                        Pestana.Conexiones -> Icons.Filled.Wifi
-                        Pestana.Editor -> Icons.Filled.Code
+                DESTINOS.forEach { d ->
+                    val icono = when (d.ruta) {
+                        "hosts" -> Icons.Filled.Dns
+                        "terminales" -> Icons.Filled.Terminal
+                        "sftp" -> Icons.Filled.Folder
+                        else -> Icons.Filled.Settings
                     }
                     NavigationBarItem(
-                        selected = rutaActual == pestana.ruta,
+                        selected = ruta == d.ruta,
                         onClick = {
-                            controladorNav.navigate(pestana.ruta) {
-                                popUpTo(controladorNav.graph.startDestinationId) { saveState = true }
+                            nav.navigate(d.ruta) {
+                                popUpTo(nav.graph.findStartDestination().id) { saveState = true }
                                 launchSingleTop = true
                                 restoreState = true
                             }
                         },
-                        icon = { Icon(icono, contentDescription = pestana.titulo) },
-                        label = { Text(pestana.titulo) }
+                        icon = { Icon(icono, contentDescription = d.titulo) },
+                        label = { Text(d.titulo) }
                     )
                 }
             }
         }
-    ) { paddingInterno ->
+    ) { pad ->
         NavHost(
-            navController = controladorNav,
-            startDestination = Pestana.Conexiones.ruta,
-            modifier = Modifier.padding(paddingInterno)
+            navController = nav,
+            startDestination = "hosts",
+            modifier = Modifier.padding(pad)
         ) {
-            composable(Pestana.Almacenamiento.ruta) { PantallaAlmacenamiento() }
-            composable(Pestana.Conexiones.ruta) { PantallaConexiones() }
-            composable(Pestana.Editor.ruta) { PantallaEditorCodigo() }
+            composable("hosts") { PantallaHosts(onAbrirTerminal = { nav.navigate("terminales") }) }
+            composable("terminales") { PantallaTerminales() }
+            composable("sftp") { PantallaSftp() }
+            composable("ajustes") { PantallaAjustes() }
         }
     }
 }
