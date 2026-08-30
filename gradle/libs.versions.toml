@@ -1,0 +1,21 @@
+[versions]
+agp = "8.5.0"
+kotlin = "1.9.24"
+composeBom = "2024.06.00"
+room = "2.6.1"
+jsch = "0.2.17"
+sshj = "0.38.0"
+commonsNet = "3.11.1"
+
+[libraries]
+compose-bom = { group = "androidx.compose", name = "compose-bom", version.ref = "composeBom" }
+room-runtime = { group = "androidx.room", name = "room-runtime", version.ref = "room" }
+room-ktx = { group = "androidx.room", name = "room-ktx", version.ref = "room" }
+room-compiler = { group = "androidx.room", name = "room-compiler", version.ref = "room" }
+jsch = { group = "com.github.mwiede", name = "jsch", version.ref = "jsch" }
+sshj = { group = "com.hierynomus", name = "sshj", version.ref = "sshj" }
+commons-net = { group = "commons-net", name = "commons-net", version.ref = "commonsNet" }
+
+[plugins]
+android-application = { id = "com.android.application", version.ref = "agp" }
+kotlin-android = { id = "org.jetbrains.kotlin.android", version.ref = "kotlin" }
