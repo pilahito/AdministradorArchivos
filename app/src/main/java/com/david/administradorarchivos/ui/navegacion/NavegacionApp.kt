@@ -51,16 +51,6 @@ fun NavegacionPrincipal() {
         alcance.launch { drawer.close() }
     }
 
-    val titulo = when (ruta) {
-        "hosts" -> Idioma.t("Sesiones", "Sessions")
-        "terminales" -> "Terminal"
-        "sftp" -> "SFTP"
-        "snippets" -> "Snippets"
-        "tuneles" -> Idioma.t("Túneles", "Tunnels")
-        "ajustes" -> Idioma.t("Ajustes", "Settings")
-        else -> "CyberTerm"
-    }
-
     val destinosBarra = listOf(
         Triple("hosts", Idioma.t("Sesiones", "Sessions"), Icons.Filled.Dns),
         Triple("terminales", Idioma.t("Terminal", "Terminal"), Icons.Filled.Terminal),
@@ -116,7 +106,7 @@ fun NavegacionPrincipal() {
         Scaffold(
             topBar = {
                 TopAppBar(
-                    title = { Text(titulo) },
+                    title = { Text("CyberTerm") },
                     navigationIcon = {
                         IconButton(onClick = { alcance.launch { drawer.open() } }) {
                             Icon(Icons.Filled.Menu, contentDescription = "Menú")
