@@ -39,7 +39,9 @@ fun PantallaSftp() {
                         it.filename to it.attrs.isDir
                     } ?: emptyList()
                 }
-                nombres = lista.sortedWith(compareByDescending<Pair<String, Boolean>> { it.second }.thenBy { it.first.lowercase() })
+                nombres = lista.sortedWith(
+                    compareByDescending<Pair<String, Boolean>> { it.second }.thenBy { it.first.lowercase() }
+                )
                 ruta = destino
                 error = null
             } catch (e: Exception) {
@@ -49,25 +51,33 @@ fun PantallaSftp() {
     }
 
     LaunchedEffect(host) {
-        if (host != null) cargar(".")
-        else nombres = emptyList()
+        if (host != null) cargar(".") else nombres = emptyList()
     }
 
     Column(Modifier.fillMaxSize().background(FondoApp).padding(16.dp)) {
         Row(verticalAlignment = Alignment.CenterVertically, modifier = Modifier.fillMaxWidth()) {
             Column(Modifier.weight(1f)) {
                 Text("SFTP", style = MaterialTheme.typography.titleLarge, fontWeight = FontWeight.Bold, color = Texto)
-                Text(if (host != null) ruta else "Conecta un host primero", color = TextoSuave)
+                Text(
+                    if (host != null) ruta else Idioma.t("Conecta una sesión primero", "Connect a session first"),
+                    color = TextoSuave
+                )
             }
             IconButton(onClick = { if (host != null) cargar(ruta) }) {
-                Icon(Icons.Filled.Refresh, contentDescription = "Refrescar", tint = AzulAccion)
+                Icon(Icons.Filled.Refresh, contentDescription = Idioma.t("Refrescar", "Refresh"), tint = AzulAccion)
             }
         }
         Spacer(Modifier.height(12.dp))
         error?.let { Text(it, color = Rojo) }
 
         if (host == null) {
-            Text("Abre Hosts, pulsa un servidor y vuelve aquí para ver sus archivos.", color = TextoSuave)
+            Text(
+                Idioma.t(
+                    "Ve a Sesiones, crea una y tócala. Luego vuelve aquí para ver los archivos.",
+                    "Go to Sessions, create one and tap it. Then come back to browse files."
+                ),
+                color = TextoSuave
+            )
         } else {
             LazyColumn(verticalArrangement = Arrangement.spacedBy(6.dp)) {
                 items(nombres) { (nombre, esDir) ->

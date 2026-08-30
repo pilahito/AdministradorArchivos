@@ -10,6 +10,7 @@ import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.foundation.verticalScroll
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.Cloud
+import androidx.compose.material.icons.filled.Delete
 import androidx.compose.material.icons.filled.Key
 import androidx.compose.material.icons.filled.Logout
 import androidx.compose.material3.*
@@ -19,6 +20,8 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
+import com.david.administradorarchivos.core.datos.AlmacenClaves
+import com.david.administradorarchivos.core.datos.ClaveSsh
 import com.david.administradorarchivos.core.red.ClienteGoogleDrive
 import com.david.administradorarchivos.core.red.GestorSesion
 import com.david.administradorarchivos.ui.theme.*
@@ -34,8 +37,12 @@ fun PantallaAjustes() {
     val alcance = rememberCoroutineScope()
     val clienteDrive = remember { ClienteGoogleDrive(ctx) }
     val clienteSignIn = remember { ClienteGoogleDrive.crearClienteSignIn(ctx) }
+    val llavero = remember { AlmacenClaves(ctx) }
     var email by remember { mutableStateOf(ClienteGoogleDrive.cuentaGuardada(ctx)?.email) }
     var info by remember { mutableStateOf<String?>(null) }
+    var claves by remember { mutableStateOf(llavero.listar()) }
+    var nombreClave by remember { mutableStateOf("") }
+    var rutaClave by remember { mutableStateOf("") }
 
     val launcher = rememberLauncherForActivityResult(ActivityResultContracts.StartActivityForResult()) { res ->
         if (res.resultCode != Activity.RESULT_OK) {
@@ -64,26 +71,85 @@ fun PantallaAjustes() {
     Column(
         Modifier.fillMaxSize().background(FondoApp).padding(16.dp).verticalScroll(rememberScrollState())
     ) {
-        Text(Idioma.t("Ajustes", "Settings"), style = MaterialTheme.typography.titleLarge, fontWeight = FontWeight.Bold, color = Texto)
+        Text("Sesiones", style = MaterialTheme.typography.titleLarge, fontWeight = FontWeight.Bold, color = Texto)
+        Text(
+            Idioma.t("Cliente SSH propio. Todo gratis en esta app.", "Our own SSH client. Everything is free here."),
+            color = TextoSuave,
+            style = MaterialTheme.typography.bodyMedium
+        )
         Spacer(Modifier.height(16.dp))
 
         Text(Idioma.t("Idioma", "Language"), color = TextoSuave)
         Spacer(Modifier.height(8.dp))
         Card(colors = CardDefaults.cardColors(containerColor = FondoTarjeta), shape = RoundedCornerShape(16.dp)) {
-            Row(
-                Modifier.fillMaxWidth().padding(16.dp),
-                verticalAlignment = Alignment.CenterVertically
-            ) {
+            Row(Modifier.fillMaxWidth().padding(16.dp), verticalAlignment = Alignment.CenterVertically) {
                 Text(
                     if (Idioma.espanol) "Español" else "English",
                     color = Texto,
                     modifier = Modifier.weight(1f),
                     fontWeight = FontWeight.SemiBold
                 )
-                Switch(
-                    checked = Idioma.espanol,
-                    onCheckedChange = { Idioma.cambiar(ctx, it) }
+                Switch(checked = Idioma.espanol, onCheckedChange = { Idioma.cambiar(ctx, it) })
+            }
+        }
+
+        Spacer(Modifier.height(20.dp))
+        Text(Idioma.t("Llavero SSH", "SSH keychain"), color = TextoSuave)
+        Spacer(Modifier.height(8.dp))
+        Card(colors = CardDefaults.cardColors(containerColor = FondoTarjeta), shape = RoundedCornerShape(16.dp)) {
+            Column(Modifier.padding(16.dp), verticalArrangement = Arrangement.spacedBy(8.dp)) {
+                Text(
+                    Idioma.t(
+                        "Guarda la ruta de una clave en el teléfono y úsala al crear una sesión.",
+                        "Save a key path on the phone and use it when creating a session."
+                    ),
+                    color = TextoSuave,
+                    style = MaterialTheme.typography.bodyMedium
                 )
+                OutlinedTextField(
+                    nombreClave,
+                    { nombreClave = it },
+                    label = { Text(Idioma.t("Nombre", "Name")) },
+                    singleLine = true,
+                    modifier = Modifier.fillMaxWidth()
+                )
+                OutlinedTextField(
+                    rutaClave,
+                    { rutaClave = it },
+                    label = { Text(Idioma.t("Ruta del archivo (ej. /sdcard/id_rsa)", "File path (e.g. /sdcard/id_rsa)")) },
+                    singleLine = true,
+                    modifier = Modifier.fillMaxWidth()
+                )
+                Button(
+                    onClick = {
+                        if (nombreClave.isNotBlank() && rutaClave.isNotBlank()) {
+                            llavero.guardar(ClaveSsh(nombre = nombreClave.trim(), ruta = rutaClave.trim()))
+                            claves = llavero.listar()
+                            nombreClave = ""
+                            rutaClave = ""
+                        }
+                    },
+                    modifier = Modifier.fillMaxWidth(),
+                    colors = ButtonDefaults.buttonColors(containerColor = AzulAccion)
+                ) {
+                    Icon(Icons.Filled.Key, null, Modifier.size(18.dp))
+                    Spacer(Modifier.width(8.dp))
+                    Text(Idioma.t("Guardar clave", "Save key"))
+                }
+                claves.forEach { c ->
+                    Row(verticalAlignment = Alignment.CenterVertically) {
+                        Column(Modifier.weight(1f)) {
+                            Text(c.nombre, color = Texto, fontWeight = FontWeight.SemiBold)
+                            Text(c.ruta, color = TextoSuave, style = MaterialTheme.typography.bodySmall)
+                        }
+                        IconButton(onClick = {
+                            llavero.borrar(c.id)
+                            claves = llavero.listar()
+                        }) {
+                            Icon(Icons.Filled.Delete, contentDescription = Idioma.t("Borrar", "Delete"), tint = TextoSuave)
+                        }
+                    }
+                }
             }
         }
 
