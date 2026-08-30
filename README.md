@@ -1,11 +1,11 @@
-# Sesiones
+# CyberTerm
 
 Cliente SSH / SFTP / túneles para Android. Open source, sin pago.
 Logo: cubo terminal verde.
 
 [![APK](https://github.com/pilahito/AdministradorArchivos/actions/workflows/compilar-apk.yml/badge.svg)](https://github.com/pilahito/AdministradorArchivos/actions)
 
-**Descarga:** [Releases](https://github.com/pilahito/AdministradorArchivos/releases) → `Hosts-debug.apk`
+**Descarga:** [Releases](https://github.com/pilahito/AdministradorArchivos/releases) → `CyberTerm-debug.apk`
 
 ## Pantallas
 

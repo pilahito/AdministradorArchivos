@@ -18,12 +18,12 @@ class ServicioSesion : Service() {
         if (Build.VERSION.SDK_INT >= 26) {
             val mgr = getSystemService(NotificationManager::class.java)
             mgr.createNotificationChannel(
-                NotificationChannel(canal, "Sesión SSH", NotificationManager.IMPORTANCE_LOW)
+                NotificationChannel(canal, "CyberTerm SSH", NotificationManager.IMPORTANCE_LOW)
             )
         }
         val noti = NotificationCompat.Builder(this, canal)
-            .setContentTitle("Sesiones")
-            .setContentText("Hay una sesión SSH activa")
+            .setContentTitle("CyberTerm")
+            .setContentText("Hay una sesión o túnel SSH activo")
             .setSmallIcon(R.drawable.ic_launcher_foreground)
             .setOngoing(true)
             .build()

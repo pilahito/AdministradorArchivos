@@ -24,25 +24,25 @@ jobs:
       - run: gradle assembleDebug --no-daemon --stacktrace
       - run: |
           mkdir -p dist
-          cp app/build/outputs/apk/debug/app-debug.apk dist/Sesiones-debug.apk
+          cp app/build/outputs/apk/debug/app-debug.apk dist/CyberTerm-debug.apk
       - uses: actions/upload-artifact@v4
         with:
-          name: sesiones-apk
-          path: dist/Sesiones-debug.apk
+          name: cyberterm-apk
+          path: dist/CyberTerm-debug.apk
           if-no-files-found: error
           retention-days: 14
       - uses: softprops/action-gh-release@v2
         with:
-          tag_name: ${{ github.ref_type == 'tag' && github.ref_name || format('v0.3.{0}', github.run_number) }}
-          name: Sesiones ${{ github.ref_type == 'tag' && github.ref_name || format('v0.3.{0}', github.run_number) }}
+          tag_name: ${{ github.ref_type == 'tag' && github.ref_name || format('v0.4.{0}', github.run_number) }}
+          name: CyberTerm ${{ github.ref_type == 'tag' && github.ref_name || format('v0.4.{0}', github.run_number) }}
           body: |
-            APK de **Sesiones** (SSH / SFTP / túneles).
+            APK de **CyberTerm** (SSH / SFTP / túneles).
 
-            1. Descarga **Sesiones-debug.apk**
+            1. Descarga **CyberTerm-debug.apk**
             2. Permite orígenes desconocidos
             3. Instala
 
             Commit `${{ github.sha }}`.
-          files: dist/Sesiones-debug.apk
+          files: dist/CyberTerm-debug.apk
           generate_release_notes: true
           make_latest: true
