@@ -12,6 +12,7 @@ En Android lo correcto es **dependencia Maven/Gradle**: Gradle baja el JAR compi
 | [Apache Commons Net](https://commons.apache.org/proper/commons-net/) | `commons-net:3.11.1` | FTP |
 | Google Drive API | Maven Google | OAuth + Drive |
 | AndroidX Room | Maven Google | Bóveda local (hosts, claves, túneles, snippets) |
+| [termux/termux-app](https://github.com/termux/termux-app) terminal-view/emulator | JitPack `v0.118.0` | VT real (GPL-3.0) — `docs/licenses/TERMUX-NOTICE.md` |
 
 Eso **sí** es código experto de esos proyectos, empaquetado como librería.
 
@@ -19,7 +20,7 @@ Eso **sí** es código experto de esos proyectos, empaquetado como librería.
 
 | Repo | Por qué no se pega el source |
 |---|---|
-| [termux/termux-app](https://github.com/termux/termux-app) | GPL. `terminal-view` / `terminal-emulator` son otro proyecto enorme. Pegarlo obliga a licenciar **toda** la app como GPL y rompe el build actual. |
+| [termux/termux-app](https://github.com/termux/termux-app) | GPL-3.0. **No se pega el source**; se enlaza por JitPack (`terminal-view`/`terminal-emulator` v0.118.0). Ver NOTICE. |
 | [connectbot/connectbot](https://github.com/connectbot/connectbot) | GPL. Misma razón. |
 | [zhanghai/MaterialFiles](https://github.com/zhanghai/MaterialFiles) | GPL. Explorador completo, no un módulo Maven. |
 | [GlassHaven/Haven](https://github.com/GlassHaven/Haven) | Suite aparte; no hay artefacto Maven para pegar. |

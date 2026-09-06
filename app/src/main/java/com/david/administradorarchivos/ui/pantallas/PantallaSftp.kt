@@ -108,7 +108,7 @@ fun PantallaSftp() {
                 ) {
                     Column(Modifier.padding(10.dp)) {
                         Text(
-                            Idioma.t("Remote File", "Remote File"),
+                            Idioma.t("Archivos remotos", "Remote files"),
                             color = AzulAccion,
                             fontWeight = FontWeight.SemiBold,
                             fontSize = 14.sp
@@ -171,7 +171,7 @@ fun PantallaSftp() {
                             Icon(Icons.Filled.Upload, null, tint = VerdeNeon, modifier = Modifier.size(18.dp))
                             Spacer(Modifier.width(6.dp))
                             Text(
-                                Idioma.t("Transferencias", "Transfers"),
+                                Idioma.t("Cola de transferencias", "Transfer queue"),
                                 color = Texto,
                                 fontWeight = FontWeight.SemiBold,
                                 fontSize = 14.sp

@@ -7,16 +7,17 @@ import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.Code
 import androidx.compose.material.icons.filled.Dns
 import androidx.compose.material.icons.filled.Folder
+import androidx.compose.material.icons.filled.Lock
 import androidx.compose.material.icons.filled.Menu
 import androidx.compose.material.icons.filled.Settings
 import androidx.compose.material.icons.filled.SwapHoriz
 import androidx.compose.material.icons.filled.Terminal
-import androidx.compose.material.icons.filled.VpnKey
 import androidx.compose.material3.*
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.rememberCoroutineScope
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
 import androidx.navigation.NavGraph.Companion.findStartDestination
 import androidx.navigation.compose.NavHost
@@ -56,11 +57,12 @@ fun NavegacionPrincipal() {
         alcance.launch { drawer.close() }
     }
 
+    // Mockup bottom nav: Hosts, Terminal, SFTP, Bóveda, Ajustes
     val destinosBarra = listOf(
         Triple("hosts", Idioma.t("Hosts", "Hosts"), Icons.Filled.Dns),
         Triple("terminales", Idioma.t("Terminal", "Terminal"), Icons.Filled.Terminal),
         Triple("sftp", "SFTP", Icons.Filled.Folder),
-        Triple("boveda", Idioma.t("Bóveda", "Vault"), Icons.Filled.VpnKey),
+        Triple("boveda", Idioma.t("Bóveda", "Vault"), Icons.Filled.Lock),
         Triple("ajustes", Idioma.t("Ajustes", "Settings"), Icons.Filled.Settings)
     )
 
@@ -73,6 +75,7 @@ fun NavegacionPrincipal() {
                     "CloudTerm Pro",
                     style = MaterialTheme.typography.titleLarge,
                     color = AzulAccion,
+                    fontWeight = FontWeight.Bold,
                     modifier = Modifier.padding(16.dp)
                 )
                 NavigationDrawerItem(
@@ -97,7 +100,7 @@ fun NavegacionPrincipal() {
                     label = { Text(Idioma.t("Bóveda", "Vault")) },
                     selected = ruta == "boveda",
                     onClick = { ir("boveda") },
-                    icon = { Icon(Icons.Filled.VpnKey, null) }
+                    icon = { Icon(Icons.Filled.Lock, null) }
                 )
                 NavigationDrawerItem(
                     label = { Text("Snippets") },
@@ -123,18 +126,27 @@ fun NavegacionPrincipal() {
         Scaffold(
             containerColor = FondoApp,
             topBar = {
-                TopAppBar(
-                    title = { Text("CloudTerm Pro", color = Texto) },
-                    navigationIcon = {
-                        IconButton(onClick = { alcance.launch { drawer.open() } }) {
-                            Icon(Icons.Filled.Menu, contentDescription = "Menú", tint = AzulAccion)
-                        }
-                    },
-                    colors = TopAppBarDefaults.topAppBarColors(
-                        containerColor = FondoBarra,
-                        titleContentColor = Texto
+                // Cabecera mínima: el mockup pone marca en Hosts; aquí menú + brand
+                if (ruta != "hosts" && ruta != "terminales") {
+                    TopAppBar(
+                        title = {
+                            Text(
+                                "CloudTerm Pro",
+                                color = Texto,
+                                fontWeight = FontWeight.Bold
+                            )
+                        },
+                        navigationIcon = {
+                            IconButton(onClick = { alcance.launch { drawer.open() } }) {
+                                Icon(Icons.Filled.Menu, contentDescription = "Menú", tint = AzulAccion)
+                            }
+                        },
+                        colors = TopAppBarDefaults.topAppBarColors(
+                            containerColor = FondoBarra,
+                            titleContentColor = Texto
+                        )
                     )
-                )
+                }
             },
             bottomBar = {
                 NavigationBar(containerColor = FondoBarra) {

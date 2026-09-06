@@ -182,7 +182,7 @@ fun PantallaHosts(onAbrirTerminal: () -> Unit) {
                     onClick = { },
                     label = {
                         Text(
-                            Idioma.t("MEGA · Sincronizado", "MEGA · Synced"),
+                            Idioma.t("MEGA - Sincronizado", "MEGA - Synced"),
                             color = AzulAccion,
                             fontSize = 11.sp,
                             maxLines = 1
@@ -472,6 +472,16 @@ private fun HojaConectar(
                     )
                 }
             }
+        }
+        OutlinedButton(
+            onClick = { },
+            modifier = Modifier.fillMaxWidth(),
+            shape = RoundedCornerShape(12.dp),
+            border = BorderStroke(1.dp, AzulAccion.copy(alpha = 0.5f))
+        ) {
+            Icon(Icons.Filled.Key, null, tint = AzulAccion, modifier = Modifier.size(18.dp))
+            Spacer(Modifier.width(8.dp))
+            Text(Idioma.t("Gestión de claves", "Key Management"), color = AzulAccion)
         }
         Button(
             onClick = {

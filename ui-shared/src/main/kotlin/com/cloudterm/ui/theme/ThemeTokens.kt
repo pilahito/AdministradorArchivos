@@ -3,6 +3,7 @@ package com.cloudterm.ui.theme
 /**
  * Tokens de color multiplataforma (Android Compose / desktop / web).
  * Valores ARGB 0xAARRGGBB.
+ * Identidad mockup: navy glass + cyan #00E5FF + neon #39FF14.
  */
 data class ThemePalette(
     val id: String,
@@ -22,21 +23,21 @@ data class ThemePalette(
 )
 
 object CloudTermThemes {
-    /** Oscuro cian / neÃ³n (identidad CloudTerm Pro). */
+    /** Oscuro navy / cian / neón (identidad CloudTerm Pro mockup). */
     val DarkCyanNeon = ThemePalette(
         id = "dark_cyan_neon",
         displayName = "Oscuro cian/verde neon",
-        background = 0xFF0F172A,
+        background = 0xFF0A1628,
         surface = 0xFF1E293B,
         surfaceVariant = 0xFF334155,
-        primary = 0xFF00F0FF,
-        secondary = 0xFF00E676,
-        accent = 0xFF7C6CF0,
+        primary = 0xFF00E5FF,
+        secondary = 0xFF39FF14,
+        accent = 0xFF00E5FF,
         onBackground = 0xFFE2E8F0,
         onSurface = 0xFFE2E8F0,
         muted = 0xFF94A3B8,
         error = 0xFFEF4444,
-        success = 0xFF00E676,
+        success = 0xFF39FF14,
         border = 0xFF334155
     )
 
