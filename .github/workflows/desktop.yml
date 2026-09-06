@@ -31,6 +31,13 @@ jobs:
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
 
+      - name: Upload Windows artifacts
+        uses: actions/upload-artifact@v4
+        with:
+          name: CloudTermPro-windows
+          path: app-desktop/src-tauri/target/release/bundle
+          if-no-files-found: warn
+
   linux:
     runs-on: ubuntu-22.04
     steps:
