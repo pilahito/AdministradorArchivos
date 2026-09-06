@@ -25,6 +25,9 @@ class AccessLog {
         entries += AccessLogEntry(event = event, detail = detail)
     }
 
+    /** Alias usado por EncryptedVault. */
+    fun record(event: VaultAccessEvent, detail: String = "") = log(event, detail)
+
     fun recent(limit: Int = 50): List<AccessLogEntry> =
         entries.takeLast(limit)
 

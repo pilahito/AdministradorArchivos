@@ -5,6 +5,8 @@ import net.schmizz.sshj.connection.channel.direct.LocalPortForwarder
 import net.schmizz.sshj.connection.channel.direct.Parameters
 import net.schmizz.sshj.connection.channel.direct.Session
 import net.schmizz.sshj.sftp.SFTPClient
+import net.schmizz.sshj.sftp.OpenMode
+import java.util.EnumSet
 import net.schmizz.sshj.transport.verification.PromiscuousVerifier
 import net.schmizz.sshj.userauth.keyprovider.KeyProvider
 import java.io.File
@@ -55,7 +57,7 @@ class SshClient(
             !config.password.isNullOrBlank() ->
                 client.authPassword(config.username, config.password)
             else ->
-                error("Falta contraseña o clave SSH privada")
+                error("Falta contraseÃ±a o clave SSH privada")
         }
     }
 
@@ -81,7 +83,7 @@ class SshClient(
             override val error: InputStream get() = shell.errorStream
             override fun resizePty(columns: Int, rows: Int) {
                 // SSHJ Session no expone resize trivial en todas las versiones;
-                // documentado para integración futura con NewTermux / emulador.
+                // documentado para integraciÃ³n futura con NewTermux / emulador.
             }
             override fun close() {
                 try { shell.close() } catch (_: Exception) {}
@@ -142,7 +144,7 @@ class SshClient(
     override fun close() = disconnect()
 
     private fun requireClient(): SSHClient =
-        ssh?.takeIf { it.isConnected } ?: error("Sin conexión SSH — llama a connect() primero")
+        ssh?.takeIf { it.isConnected } ?: error("Sin conexiÃ³n SSH â€” llama a connect() primero")
 }
 
 private class SshjSftpSession(
@@ -160,11 +162,18 @@ private class SshjSftpSession(
         }
 
     override fun download(remotePath: String, localOut: OutputStream) {
-        sftp.get(remotePath, localOut)
+        sftp.open(remotePath).use { remote ->
+            remote.RemoteFileInputStream().use { input -> input.copyTo(localOut) }
+        }
     }
 
     override fun upload(localIn: InputStream, remotePath: String) {
-        sftp.put(localIn, remotePath)
+        val modes = EnumSet.of(OpenMode.CREAT, OpenMode.WRITE, OpenMode.TRUNC)
+        sftp.open(remotePath, modes).use { remote ->
+            remote.RemoteFileOutputStream().use { output -> localIn.copyTo(output) }
+        }
+    }
+        }
     }
 
     override fun mkdir(path: String) {

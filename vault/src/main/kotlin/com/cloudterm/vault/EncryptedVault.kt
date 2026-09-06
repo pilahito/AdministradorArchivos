@@ -38,10 +38,10 @@ class EncryptedVault(
             }
             sessionKey = passphrase.copyOf()
             unlocked.set(true)
-            accessLog.record(VaultAccessEvent.UNLOCK_OK)
+            accessLog.log(VaultAccessEvent.UNLOCK_OK)
             true
         } catch (e: Exception) {
-            accessLog.record(VaultAccessEvent.UNLOCK_FAIL, e.message ?: "error")
+            accessLog.log(VaultAccessEvent.UNLOCK_FAIL, e.message ?: "error")
             false
         }
     }
@@ -51,7 +51,7 @@ class EncryptedVault(
      * En Android se enlazará con BiometricPrompt + Keystore.
      */
     fun unlockWithBiometricStub(): Boolean {
-        accessLog.record(
+        accessLog.log(
             VaultAccessEvent.BIOMETRIC_STUB,
             "Biometría pendiente: BiometricPrompt / Windows Hello / Touch ID"
         )
@@ -64,12 +64,12 @@ class EncryptedVault(
         plaintextCache.fill(0)
         plaintextCache = ByteArray(0)
         unlocked.set(false)
-        accessLog.record(VaultAccessEvent.LOCK)
+        accessLog.log(VaultAccessEvent.LOCK)
     }
 
     fun readBytes(): ByteArray {
         check(isUnlocked) { "Bóveda bloqueada" }
-        accessLog.record(VaultAccessEvent.READ, "size=${plaintextCache.size}")
+        accessLog.log(VaultAccessEvent.READ, "size=${plaintextCache.size}")
         return plaintextCache.copyOf()
     }
 
@@ -78,7 +78,7 @@ class EncryptedVault(
         val key = sessionKey ?: error("Sin sesión")
         plaintextCache = data.copyOf()
         vaultFile.writeBytes(VaultCrypto.encrypt(plaintextCache, key))
-        accessLog.record(VaultAccessEvent.WRITE, "size=${data.size}")
+        accessLog.log(VaultAccessEvent.WRITE, "size=${data.size}")
     }
 
     fun logs(): List<AccessLogEntry> = accessLog.recent()
