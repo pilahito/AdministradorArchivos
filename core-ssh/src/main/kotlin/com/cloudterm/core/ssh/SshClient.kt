@@ -173,8 +173,6 @@ private class SshjSftpSession(
             remote.RemoteFileOutputStream().use { output -> localIn.copyTo(output) }
         }
     }
-        }
-    }
 
     override fun mkdir(path: String) {
         sftp.mkdir(path)
