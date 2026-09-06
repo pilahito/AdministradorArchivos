@@ -1,4 +1,4 @@
-﻿# Compose Multiplatform (notas)
+# Compose Multiplatform (notas)
 
 Dependencias futuras compartidas: `:core-ssh`, `:vault`, `:ui-shared`, `:cloud-sync`.
 

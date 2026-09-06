@@ -1,4 +1,4 @@
-﻿package com.cloudterm.ui.theme
+package com.cloudterm.ui.theme
 
 /**
  * Tokens de color multiplataforma (Android Compose / desktop / web).

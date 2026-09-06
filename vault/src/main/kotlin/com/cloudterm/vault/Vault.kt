@@ -1,4 +1,4 @@
-﻿package com.cloudterm.vault
+package com.cloudterm.vault
 
 import java.io.File
 import java.security.SecureRandom

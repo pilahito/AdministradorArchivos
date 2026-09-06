@@ -1,4 +1,4 @@
-﻿package com.cloudterm.core.ssh
+package com.cloudterm.core.ssh
 
 import net.schmizz.sshj.SSHClient
 import net.schmizz.sshj.connection.channel.direct.LocalPortForwarder

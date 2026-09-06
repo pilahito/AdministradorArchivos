@@ -1,4 +1,4 @@
-﻿# Build CloudTerm Pro
+# Build CloudTerm Pro
 
 Guia completa: [docs/BUILD.md](docs/BUILD.md)
 

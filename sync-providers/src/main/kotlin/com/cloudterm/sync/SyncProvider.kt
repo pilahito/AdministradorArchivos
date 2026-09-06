@@ -1,4 +1,4 @@
-﻿package com.cloudterm.sync
+package com.cloudterm.sync
 
 /**
  * Contrato comun para proveedores de nube (MEGA, Drive, Dropbox, OneDrive, TeraBox, 1fichier, WebDAV).

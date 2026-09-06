@@ -1,4 +1,4 @@
-﻿# app-desktop - CloudTerm Pro
+# app-desktop - CloudTerm Pro
 
 Scaffold escritorio (Tauri / Compose Multiplatform). Ver package.json y COMPOSE_MULTIPLATFORM.md.
 
