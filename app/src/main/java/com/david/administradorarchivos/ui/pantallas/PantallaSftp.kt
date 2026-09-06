@@ -17,9 +17,12 @@ import androidx.compose.runtime.*
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
+import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
+import com.david.administradorarchivos.core.datos.AlmacenHosts
+import com.david.administradorarchivos.core.datos.HostGuardado
 import com.david.administradorarchivos.core.red.GestorSesion
 import com.david.administradorarchivos.ui.theme.*
 import kotlinx.coroutines.Dispatchers
@@ -32,12 +35,20 @@ private data class TransferenciaDemo(
     val velocidad: String
 )
 
+@OptIn(ExperimentalMaterial3Api::class)
 @Composable
 fun PantallaSftp() {
+    val ctx = LocalContext.current
+    val almacen = remember { AlmacenHosts(ctx) }
+    val hosts = remember { almacen.listar() }
     val host by GestorSesion.hostActivo.collectAsState()
     var ruta by remember { mutableStateOf("/") }
     var nombres by remember { mutableStateOf<List<Pair<String, Boolean>>>(emptyList()) }
     var error by remember { mutableStateOf<String?>(null) }
+    var hostSelId by remember { mutableStateOf(hosts.firstOrNull()?.id.orEmpty()) }
+    var expandHosts by remember { mutableStateOf(false) }
+    var conectando by remember { mutableStateOf(false) }
+    var campoConectar by remember { mutableStateOf("") }
     val alcance = rememberCoroutineScope()
     val transferencias = remember {
         listOf(
@@ -45,6 +56,7 @@ fun PantallaSftp() {
             TransferenciaDemo("config.yml", 0.42f, "12.1 MB/s")
         )
     }
+    val hostSel = hosts.firstOrNull { it.id == hostSelId } ?: hosts.firstOrNull()
 
     fun cargar(destino: String) {
         alcance.launch {
@@ -65,6 +77,21 @@ fun PantallaSftp() {
         }
     }
 
+    fun conectarHost(h: HostGuardado) {
+        conectando = true
+        error = null
+        alcance.launch {
+            try {
+                withContext(Dispatchers.IO) { GestorSesion.conectar(h) }
+                cargar(".")
+            } catch (e: Exception) {
+                error = e.message ?: Idioma.t("No se pudo conectar", "Could not connect")
+            } finally {
+                conectando = false
+            }
+        }
+    }
+
     LaunchedEffect(host) {
         if (host != null) cargar(".") else nombres = emptyList()
     }
@@ -74,7 +101,7 @@ fun PantallaSftp() {
             Column(Modifier.weight(1f)) {
                 Text("SFTP", style = MaterialTheme.typography.titleLarge, fontWeight = FontWeight.Bold, color = Texto)
                 Text(
-                    if (host != null) ruta else Idioma.t("Conecta un host primero", "Connect a host first"),
+                    if (host != null) ruta else Idioma.t("Elige un host y pulsa Conectar", "Pick a host and tap Connect"),
                     color = TextoSuave,
                     fontSize = 13.sp
                 )
@@ -87,19 +114,131 @@ fun PantallaSftp() {
         error?.let { Text(it, color = Rojo) }
 
         if (host == null) {
-            Text(
-                Idioma.t(
-                    "Ve a Hosts, crea uno y conéctalo. Luego vuelve aquí para ver los archivos.",
-                    "Go to Hosts, create one and connect. Then come back to browse files."
-                ),
-                color = TextoSuave
-            )
+            Card(
+                modifier = Modifier.fillMaxWidth(),
+                colors = CardDefaults.cardColors(containerColor = FondoTarjeta),
+                shape = RoundedCornerShape(14.dp),
+                border = BorderStroke(1.dp, Linea)
+            ) {
+                Column(Modifier.padding(16.dp), verticalArrangement = Arrangement.spacedBy(12.dp)) {
+                    Text(
+                        Idioma.t("Conectar SFTP", "Connect SFTP"),
+                        color = AzulAccion,
+                        fontWeight = FontWeight.SemiBold
+                    )
+                    Text(
+                        Idioma.t(
+                            "Selecciona un host guardado o escribe usuario@host[:puerto]",
+                            "Select a saved host or type user@host[:port]"
+                        ),
+                        color = TextoSuave,
+                        fontSize = 13.sp
+                    )
+
+                    ExposedDropdownMenuBox(
+                        expanded = expandHosts,
+                        onExpandedChange = { expandHosts = !expandHosts }
+                    ) {
+                        OutlinedTextField(
+                            value = hostSel?.let { "${it.alias} · ${it.usuario}@${it.direccion}:${it.puerto}" }
+                                ?: Idioma.t("Sin hosts guardados", "No saved hosts"),
+                            onValueChange = {},
+                            readOnly = true,
+                            label = { Text(Idioma.t("Host", "Host")) },
+                            trailingIcon = { ExposedDropdownMenuDefaults.TrailingIcon(expanded = expandHosts) },
+                            modifier = Modifier.menuAnchor().fillMaxWidth(),
+                            colors = OutlinedTextFieldDefaults.colors(
+                                focusedBorderColor = AzulAccion,
+                                unfocusedBorderColor = Linea,
+                                focusedTextColor = Texto,
+                                unfocusedTextColor = Texto,
+                                focusedLabelColor = AzulAccion,
+                                unfocusedLabelColor = TextoSuave,
+                                focusedContainerColor = FondoBarra,
+                                unfocusedContainerColor = FondoBarra
+                            )
+                        )
+                        ExposedDropdownMenu(
+                            expanded = expandHosts,
+                            onDismissRequest = { expandHosts = false },
+                            containerColor = FondoBarra
+                        ) {
+                            if (hosts.isEmpty()) {
+                                DropdownMenuItem(
+                                    text = {
+                                        Text(
+                                            Idioma.t("Crea un host en Hosts", "Create a host under Hosts"),
+                                            color = TextoSuave
+                                        )
+                                    },
+                                    onClick = { expandHosts = false }
+                                )
+                            } else {
+                                hosts.forEach { h ->
+                                    DropdownMenuItem(
+                                        text = {
+                                            Text("${h.alias} · ${h.usuario}@${h.direccion}", color = Texto)
+                                        },
+                                        onClick = {
+                                            hostSelId = h.id
+                                            expandHosts = false
+                                        }
+                                    )
+                                }
+                            }
+                        }
+                    }
+
+                    OutlinedTextField(
+                        value = campoConectar,
+                        onValueChange = { campoConectar = it },
+                        modifier = Modifier.fillMaxWidth(),
+                        singleLine = true,
+                        label = { Text(Idioma.t("Conectar", "Connect")) },
+                        placeholder = { Text("user@host:22", color = TextoSuave) },
+                        colors = OutlinedTextFieldDefaults.colors(
+                            focusedBorderColor = VerdeFab,
+                            unfocusedBorderColor = Linea,
+                            focusedTextColor = Texto,
+                            unfocusedTextColor = Texto,
+                            focusedLabelColor = VerdeFab,
+                            unfocusedLabelColor = TextoSuave,
+                            cursorColor = VerdeFab,
+                            focusedContainerColor = FondoBarra,
+                            unfocusedContainerColor = FondoBarra
+                        )
+                    )
+
+                    Button(
+                        onClick = {
+                            val h = hostSel
+                            if (h != null) conectarHost(h)
+                            else error = Idioma.t(
+                                "No hay host seleccionado. Crea uno en Hosts.",
+                                "No host selected. Create one under Hosts."
+                            )
+                        },
+                        enabled = !conectando && hostSel != null,
+                        colors = ButtonDefaults.buttonColors(
+                            containerColor = VerdeFab,
+                            contentColor = FondoApp
+                        ),
+                        modifier = Modifier.fillMaxWidth(),
+                        shape = RoundedCornerShape(12.dp)
+                    ) {
+                        Text(
+                            if (conectando) Idioma.t("Conectando…", "Connecting…")
+                            else Idioma.t("Conectar", "Connect"),
+                            fontWeight = FontWeight.Bold
+                        )
+                    }
+                }
+            }
         } else {
             Row(
                 Modifier.fillMaxSize(),
                 horizontalArrangement = Arrangement.spacedBy(10.dp)
             ) {
-                // Panel remoto
                 Card(
                     modifier = Modifier.weight(1.15f).fillMaxHeight(),
                     colors = CardDefaults.cardColors(containerColor = FondoTarjeta),
@@ -159,7 +298,6 @@ fun PantallaSftp() {
                     }
                 }
 
-                // Panel transferencias
                 Card(
                     modifier = Modifier.weight(1f).fillMaxHeight(),
                     colors = CardDefaults.cardColors(containerColor = FondoTarjeta),
