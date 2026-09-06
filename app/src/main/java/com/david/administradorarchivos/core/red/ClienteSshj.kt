@@ -52,6 +52,19 @@ class ClienteSshj(
         return shell!!
     }
 
+    /** Intenta cambiar tamaño del PTY (best-effort; SSHJ Session API). */
+    fun resizePty(columns: Int, rows: Int) {
+        try {
+            val s = sesion ?: return
+            // SSHJ Session changeWindowDimensions if available via reflection-safe call
+            val m = s.javaClass.methods.firstOrNull {
+                it.name == "changeWindowDimensions" && it.parameterCount == 4
+            }
+            m?.invoke(s, columns, rows, 0, 0)
+        } catch (_: Exception) {
+        }
+    }
+
     fun desconectar() {
         try { shell?.close() } catch (_: Exception) {}
         try { sesion?.close() } catch (_: Exception) {}
