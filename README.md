@@ -1,36 +1,32 @@
 # CloudTerm Pro
-
 [![Release](https://img.shields.io/github/v/release/pilahito/AdministradorArchivos?label=CloudTerm%20Pro)](https://github.com/pilahito/AdministradorArchivos/releases)
 
-**Alternativa open source a Termius**: cliente SSH / SFTP / túneles / bóveda de claves,
-sin paywall ni servidores propios. UI Android oscura neón (Hosts · Terminal · SFTP · Bóveda · Ajustes).
+Cliente **SSH / SFTP / tÃºneles** multiplataforma, open source y sin servidores propios.
+EvoluciÃ³n de CyberTerm â†’ arquitectura modular lista para Android, escritorio y sync en la nube.
 
 [![Compilar APK](https://github.com/pilahito/AdministradorArchivos/actions/workflows/compilar-apk.yml/badge.svg)](https://github.com/pilahito/AdministradorArchivos/actions/workflows/compilar-apk.yml)
 [![Android CI](https://github.com/pilahito/AdministradorArchivos/actions/workflows/android.yml/badge.svg)](https://github.com/pilahito/AdministradorArchivos/actions/workflows/android.yml)
 [![Licencia](https://img.shields.io/github/license/pilahito/AdministradorArchivos)](LICENSE)
+[![Release](https://img.shields.io/github/v/release/pilahito/AdministradorArchivos?include_prereleases)](https://github.com/pilahito/AdministradorArchivos/releases)
 
-**Descarga:** [Releases](https://github.com/pilahito/AdministradorArchivos/releases) → APK Android.
-
-> ¿Buscas algo *parecido a Termius* pero con código fuente? Este repo es exactamente eso:
-> sesiones SSH, emulador de terminal real (Termux VT), SFTP, vault cifrado y sync a *tu* nube.
+**Descarga:** [Releases](https://github.com/pilahito/AdministradorArchivos/releases) â†’ APK Android (`CloudTermPro-debug.apk` / `CyberTerm-debug.apk`).
 
 ---
 
-## Características
+## CaracterÃ­sticas
 
-- Sesiones SSH con contraseña o clave privada (SSHJ + JSch)
-- **Terminal real**: `AndroidView` + Termux `terminal-emulator` / `terminal-view` (JitPack), I/O por shell SSHJ
-- SFTP con cola de transferencias (UI)
-- Túneles locales `-L`
-- Bóveda cifrada AES-256 (PBKDF2) — módulo `:vault`
-- Sync opcional vía **tus** proveedores (WebDAV listo; Drive/Dropbox/MEGA/… stubs)
+- Sesiones SSH con contraseÃ±a o clave privada
+- Terminal interactiva + SFTP
+- TÃºneles locales `-L`
+- BÃ³veda cifrada AES-256 (PBKDF2) â€” mÃ³dulo `:vault`
+- Sync opcional vÃ­a **tus** proveedores (WebDAV listo; Drive/Dropbox/MEGA/â€¦ stubs)
 - Temas: Dark Cyan Neon, Dracula, Solarized Light, Cyberpunk
-- Open source (GPL-3) — sin telemetría a servidores de CloudTerm
+- Open source â€” sin paywall ni telemetrÃ­a a servidores de CloudTerm
 
 ## Privacidad
 
-CloudTerm Pro **no opera servidores propios**. Las credenciales y la bóveda viven en tu dispositivo.
-La sincronización (si la activas) habla solo con el proveedor que tú elijas (Nextcloud/WebDAV, Drive, etc.).
+CloudTerm Pro **no opera servidores propios**. Las credenciales y la bÃ³veda viven en tu dispositivo.
+La sincronizaciÃ³n (si la activas) habla solo con el proveedor que tÃº elijas (Nextcloud/WebDAV, Drive, etc.).
 
 ## Arquitectura
 
@@ -42,7 +38,7 @@ flowchart TB
   end
   subgraph Core
     SSH[:core-ssh SSHJ]
-    TERM[:terminal + Termux view]
+    TERM[:terminal NewTermux bridge]
     VAULT[:vault AES-256]
     UI_SH[:ui-shared temas]
   end
@@ -65,19 +61,36 @@ flowchart TB
   TERM --> SSH
 ```
 
-## Módulos Gradle
+## MÃ³dulos Gradle
 
-| Módulo | Rol |
+| MÃ³dulo | Rol |
 |--------|-----|
-| `:app` | UI Android (Compose) + emulador Termux en Terminal |
+| `:app` | UI Android (Compose) â€” applicationId sin cambios |
 | `:core-ssh` | API Kotlin: connect / startShell / exec / openSftp / createTunnel |
-| `:vault` | vault.db cifrado + logs de acceso + stubs biométricos |
+| `:vault` | vault.db cifrado + logs de acceso + stubs biomÃ©tricos |
 | `:sync-providers` | `SyncProvider` + WebDAV + stubs nube |
 | `:cloud-sync` | Orquestador (retry, `/Apps/CloudTermPro/`) |
-| `:terminal` | Contrato `TerminalSession` / `SshTerminalBridge` |
+| `:terminal` | `TerminalSession` / `SshTerminalBridge` â†’ NewTermux |
 | `:ui-shared` | Tokens de color multiplataforma |
 
 ## Build
+
+## Windows (escritorio Tauri 2)
+
+Cliente nativo en `app-desktop/` (UI Dark Neon, xterm.js, SSH vía OpenSSH/PTY).
+
+```bash
+cd app-desktop
+npm install
+npm run tauri dev
+npm run tauri build
+```
+
+Ejecutable: `app-desktop/src-tauri/target/release/cloudterm-pro.exe`  
+Instaladores: `app-desktop/src-tauri/target/release/bundle/` (NSIS / MSI).
+
+Ver [app-desktop/README.md](app-desktop/README.md).
+
 
 ### Android (APK)
 
@@ -86,12 +99,20 @@ flowchart TB
 # salida: app/build/outputs/apk/debug/app-debug.apk
 ```
 
-### Librerías JVM (sin SDK Android)
+### LibrerÃ­as JVM (sin SDK Android)
 
 ```bash
 ./gradlew :core-ssh:compileKotlin :vault:compileKotlin :sync-providers:compileKotlin
 ./gradlew :cloud-sync:compileKotlin :terminal:compileKotlin :ui-shared:compileKotlin
 ```
+
+### Roadmap binarios
+
+| Artefacto | Estado |
+|-----------|--------|
+| APK Android | CI actual (`compilar-apk.yml` / `android.yml`) |
+| EXE escritorio | Tauri 2 en `app-desktop/` (Windows EXE/MSI) |
+| DEB Linux | Workflow stub `deb.yml` |
 
 Ver [docs/BUILD.md](docs/BUILD.md).
 
@@ -99,29 +120,34 @@ Ver [docs/BUILD.md](docs/BUILD.md).
 
 | Proveedor | Estado |
 |-----------|--------|
-| WebDAV (Nextcloud, ownCloud, …) | Implementación básica |
+| WebDAV (Nextcloud, ownCloud, â€¦) | ImplementaciÃ³n bÃ¡sica |
 | MEGA | Stub |
 | Google Drive | Stub (+ OAuth parcial en `:app`) |
 | Dropbox / OneDrive / TeraBox / 1fichier | Stubs |
 
 Ruta remota por defecto: `/Apps/CloudTermPro/`.
 
-## Capturas y mockups
+## Capturas por sistema operativo
 
 | Android | Windows | Linux |
 |:---:|:---:|:---:|
 | ![Android](docs/screenshots/android.png) | ![Windows](docs/screenshots/windows.png) | ![Linux](docs/screenshots/linux.png) |
 
-Mockup objetivo (Termius-like): [docs/mockups/target-ui.png](docs/mockups/target-ui.png)
+Mockups de producto (referencia UI): [docs/mockups/cloudterm-pro-mockups.png](docs/mockups/cloudterm-pro-mockups.png)
 
-## Documentación
+Registro de mejoras: [docs/MEJORAS.md](docs/MEJORAS.md) · Historial: [CHANGELOG.md](CHANGELOG.md)
 
-- [Registro de mejoras](docs/MEJORAS.md) · [Changelog](CHANGELOG.md)
-- [Arquitectura](docs/ARQUITECTURA.md) · [Build](docs/BUILD.md)
-- [Fuentes / licencias](docs/FUENTES.md) · [NOTICE](NOTICE)
-- [Contribuir](CONTRIBUTING.md) · [Seguridad](SECURITY.md)
+
+
+## DocumentaciÃ³n
+
+- [Arquitectura](docs/ARQUITECTURA.md)
+- [Build](docs/BUILD.md)
+- [Contribuir](CONTRIBUTING.md)
+- [Seguridad](SECURITY.md)
+- [Fuentes / licencias](docs/FUENTES.md)
+- [Changelog](CHANGELOG.md)
 
 ## Licencia
 
-[GPL-3.0-or-later](LICENSE) (necesario para enlazar Termux `terminal-view`).
-SSHJ / JSch siguen siendo Apache-2.0. **No copies** código ni assets de Termius.
+Ver [LICENSE](LICENSE). Termux / Material Files **no se copian** (GPL); ver `docs/FUENTES.md`.

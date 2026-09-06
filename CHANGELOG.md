@@ -1,12 +1,18 @@
 # Historial de versiones
 
-## v1.1.0-pro — Terminal Termux + UI mockup — 2026-09-06
+## v1.1.0-pro — Windows desktop Tauri 2 — 2026-09-06
 
-- Terminal real: TerminalEmulator + TerminalRenderer (Termux 0.118 via JitPack) en AndroidView (SshTermuxView)
-- Puente SSH PTY: ClienteSshj.abrirShell() <-> emulador (bytes stdin/stdout)
-- Extra keys: Alt, Ctrl, Esc, Tab, flechas
-- UI glass dark navy / cyan #00E5FF / neon #39FF14; bottom nav Hosts|Terminal|SFTP|Boveda|Ajustes
-- NOTICE GPL Termux en docs/licenses/TERMUX-NOTICE.md
+### Registros de mejora
+
+| Area | Mejora |
+|------|--------|
+| Desktop Windows | App Tauri 2 real en `app-desktop/` (Rust + Vite + xterm.js) |
+| UI | Tabs Bóveda / SFTP / Workspace, hosts sidebar, sesión `acme-api-dev-us-west`, tema Dark Neon |
+| Terminal | xterm.js + PTY OpenSSH (cliente OpenSSH del sistema) |
+| Temas | CloudTerm Dark Neon + stubs Dracula / Solarized |
+| Empaquetado | build Tauri → EXE portable + NSIS/MSI |
+
+
 ## v1.0.0-pro — CloudTerm Pro (lanzamiento oficial) — 2026-09-06
 
 Primera publicacion oficial de **CloudTerm Pro** (evolucion de CyberTerm).
