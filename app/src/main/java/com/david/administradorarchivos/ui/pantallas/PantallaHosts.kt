@@ -17,6 +17,7 @@ import androidx.compose.material.icons.filled.Add
 import androidx.compose.material.icons.filled.Cloud
 import androidx.compose.material.icons.filled.Dns
 import androidx.compose.material.icons.filled.Key
+import androidx.compose.material.icons.filled.Menu
 import androidx.compose.material.icons.filled.MoreVert
 import androidx.compose.material.icons.filled.Password
 import androidx.compose.material.icons.filled.Search
@@ -81,7 +82,12 @@ fun parsearConexionRapida(texto: String): ConexionRapida {
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
-fun PantallaHosts(onAbrirTerminal: () -> Unit) {
+fun PantallaHosts(
+    onAbrirTerminal: () -> Unit,
+    onAbrirMenu: (() -> Unit)? = null,
+    solicitarNuevo: Boolean = false,
+    onNuevoConsumido: () -> Unit = {}
+) {
     val ctx = LocalContext.current
     val teclado = LocalSoftwareKeyboardController.current
     val almacen = remember { AlmacenHosts(ctx) }
@@ -111,6 +117,13 @@ fun PantallaHosts(onAbrirTerminal: () -> Unit) {
         mostrarNuevo = true
     }
 
+    LaunchedEffect(solicitarNuevo) {
+        if (solicitarNuevo) {
+            abrirFormulario()
+            onNuevoConsumido()
+        }
+    }
+
     fun conectar(h: HostGuardado) {
         conectando = true
         error = null
@@ -138,6 +151,11 @@ fun PantallaHosts(onAbrirTerminal: () -> Unit) {
                 verticalAlignment = Alignment.CenterVertically,
                 horizontalArrangement = Arrangement.spacedBy(8.dp)
             ) {
+                if (onAbrirMenu != null) {
+                    IconButton(onClick = onAbrirMenu) {
+                        Icon(Icons.Filled.Menu, contentDescription = Idioma.t("Menú", "Menu"), tint = AzulAccion)
+                    }
+                }
                 Row(verticalAlignment = Alignment.CenterVertically, modifier = Modifier.weight(1f, fill = false)) {
                     Box(
                         Modifier
@@ -147,7 +165,7 @@ fun PantallaHosts(onAbrirTerminal: () -> Unit) {
                             .border(1.dp, AzulAccion.copy(alpha = 0.5f), RoundedCornerShape(8.dp)),
                         contentAlignment = Alignment.Center
                     ) {
-                        Icon(Icons.Filled.Shield, null, tint = AzulAccion, modifier = Modifier.size(20.dp))
+                        Icon(Icons.Filled.Shield, null, tint = VerdeFab, modifier = Modifier.size(20.dp))
                     }
                     Spacer(Modifier.width(8.dp))
                     Text(
@@ -182,7 +200,7 @@ fun PantallaHosts(onAbrirTerminal: () -> Unit) {
                     onClick = { },
                     label = {
                         Text(
-                            Idioma.t("MEGA - Sincronizado", "MEGA - Synced"),
+                            Idioma.t("MEGA · Sincronizado", "MEGA · Synced"),
                             color = AzulAccion,
                             fontSize = 11.sp,
                             maxLines = 1
@@ -193,12 +211,6 @@ fun PantallaHosts(onAbrirTerminal: () -> Unit) {
                     border = BorderStroke(1.dp, AzulAccion.copy(alpha = 0.55f)),
                     shape = RoundedCornerShape(20.dp)
                 )
-                FloatingActionButton(
-                    onClick = { abrirFormulario() },
-                    containerColor = AzulAccion,
-                    contentColor = FondoApp,
-                    modifier = Modifier.size(44.dp)
-                ) { Icon(Icons.Filled.Add, contentDescription = Idioma.t("Nuevo host", "New host")) }
             }
 
             Spacer(Modifier.height(12.dp))
@@ -472,16 +484,6 @@ private fun HojaConectar(
                     )
                 }
             }
-        }
-        OutlinedButton(
-            onClick = { },
-            modifier = Modifier.fillMaxWidth(),
-            shape = RoundedCornerShape(12.dp),
-            border = BorderStroke(1.dp, AzulAccion.copy(alpha = 0.5f))
-        ) {
-            Icon(Icons.Filled.Key, null, tint = AzulAccion, modifier = Modifier.size(18.dp))
-            Spacer(Modifier.width(8.dp))
-            Text(Idioma.t("Gestión de claves", "Key Management"), color = AzulAccion)
         }
         Button(
             onClick = {

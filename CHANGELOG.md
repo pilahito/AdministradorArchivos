@@ -1,6 +1,7 @@
 # Historial de versiones
 
 ## v1.1.0-pro — Terminal Termux + UI mockup — 2026-09-06
+- Android drawer IA (Hosts, Terminales, SFTP, Reenvio de puertos, Snippets, Llavero/Boveda, Historial, Known hosts, Temas, Ajustes, Ayuda) + FAB + empty SFTP host picker
 
 - Terminal real: TerminalEmulator + TerminalRenderer (Termux 0.118 via JitPack) en AndroidView (SshTermuxView)
 - Puente SSH PTY: ClienteSshj.abrirShell() <-> emulador (bytes stdin/stdout)
@@ -44,7 +45,7 @@ Primera publicacion oficial de **CloudTerm Pro** (evolucion de CyberTerm).
 
 Primera version publica (CyberTerm).
 
-- Interfaz oscura tipo Termius (Hosts, Terminal, SFTP, Ajustes)
+- Interfaz oscura tipo suite remota profesional (Hosts, Terminal, SFTP, Ajustes)
 - Conexion SSH / SFTP con contrasena o clave
 - Google Drive OAuth (Client ID Android)
 - Compilacion automatica del APK en GitHub Actions

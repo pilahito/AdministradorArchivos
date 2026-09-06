@@ -67,7 +67,7 @@ fun PantallaTuneles() {
     }
 
     Column(Modifier.fillMaxSize().background(FondoApp).padding(16.dp)) {
-        Text(Idioma.t("Túneles locales", "Local tunnels"), style = MaterialTheme.typography.titleLarge, fontWeight = FontWeight.Bold, color = Texto)
+        Text(Idioma.t("Reenvío de puertos", "Port forwarding"), style = MaterialTheme.typography.titleLarge, fontWeight = FontWeight.Bold, color = Texto)
         Text(
             Idioma.t(
                 "Igual que ssh -L puerto:destino:puerto. El teléfono escucha en 127.0.0.1 y el servidor abre el destino.",
