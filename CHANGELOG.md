@@ -1,5 +1,17 @@
 # Historial de versiones
 
+## v1.2.0-pro -- Desktop UI Win/Linux + Android drawer -- 2026-09-06
+
+### Registros de mejora
+
+| Area | Mejora |
+|------|--------|
+| Desktop UI | Drawer espanol alineado a Android: Hosts, Terminales, SFTP, Reenvio de puertos, Snippets, Llavero/Boveda, Historial, Known hosts, Temas, Ajustes, Ayuda |
+| Tema | Charcoal + cyan + neon green; FAB verde; item drawer seleccionado en verde |
+| Branding | Solo CloudTerm Pro (sin marcas de terceros) |
+| Version | app-desktop 1.2.0-pro (Tauri/Cargo 1.2.0) |
+| CI Desktop | Fix `tauri build build` (quitar args duplicados); jobs Windows (nsis/msi) + Linux (deb/appimage) |
+
 ## v1.1.0-pro — Windows desktop Tauri 2 — 2026-09-06
 
 ### Registros de mejora

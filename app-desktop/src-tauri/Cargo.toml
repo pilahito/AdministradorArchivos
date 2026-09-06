@@ -1,6 +1,6 @@
 [package]
 name = "cloudterm-pro"
-version = "1.1.0"
+version = "1.2.0"
 description = "CloudTerm Pro desktop SSH/SFTP client"
 authors = ["CloudTerm Pro"]
 edition = "2021"
