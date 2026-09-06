@@ -11,6 +11,7 @@ import androidx.compose.material.icons.filled.Menu
 import androidx.compose.material.icons.filled.Settings
 import androidx.compose.material.icons.filled.SwapHoriz
 import androidx.compose.material.icons.filled.Terminal
+import androidx.compose.material.icons.filled.VpnKey
 import androidx.compose.material3.*
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
@@ -23,13 +24,17 @@ import androidx.navigation.compose.composable
 import androidx.navigation.compose.currentBackStackEntryAsState
 import androidx.navigation.compose.rememberNavController
 import com.david.administradorarchivos.ui.pantallas.PantallaAjustes
+import com.david.administradorarchivos.ui.pantallas.PantallaBoveda
 import com.david.administradorarchivos.ui.pantallas.PantallaHosts
 import com.david.administradorarchivos.ui.pantallas.PantallaSftp
 import com.david.administradorarchivos.ui.pantallas.PantallaSnippets
 import com.david.administradorarchivos.ui.pantallas.PantallaTerminales
 import com.david.administradorarchivos.ui.pantallas.PantallaTuneles
+import com.david.administradorarchivos.ui.theme.AzulAccion
 import com.david.administradorarchivos.ui.theme.FondoApp
+import com.david.administradorarchivos.ui.theme.FondoBarra
 import com.david.administradorarchivos.ui.theme.Idioma
+import com.david.administradorarchivos.ui.theme.Texto
 import kotlinx.coroutines.launch
 
 @OptIn(ExperimentalMaterial3Api::class)
@@ -52,9 +57,10 @@ fun NavegacionPrincipal() {
     }
 
     val destinosBarra = listOf(
-        Triple("hosts", Idioma.t("Sesiones", "Sessions"), Icons.Filled.Dns),
+        Triple("hosts", Idioma.t("Hosts", "Hosts"), Icons.Filled.Dns),
         Triple("terminales", Idioma.t("Terminal", "Terminal"), Icons.Filled.Terminal),
         Triple("sftp", "SFTP", Icons.Filled.Folder),
+        Triple("boveda", Idioma.t("Bóveda", "Vault"), Icons.Filled.VpnKey),
         Triple("ajustes", Idioma.t("Ajustes", "Settings"), Icons.Filled.Settings)
     )
 
@@ -63,9 +69,14 @@ fun NavegacionPrincipal() {
         drawerContent = {
             ModalDrawerSheet(drawerContainerColor = FondoApp) {
                 Spacer(Modifier.height(18.dp))
-                Text("CyberTerm", style = MaterialTheme.typography.titleLarge, modifier = Modifier.padding(16.dp))
+                Text(
+                    "CloudTerm Pro",
+                    style = MaterialTheme.typography.titleLarge,
+                    color = AzulAccion,
+                    modifier = Modifier.padding(16.dp)
+                )
                 NavigationDrawerItem(
-                    label = { Text(Idioma.t("Sesiones", "Sessions")) },
+                    label = { Text(Idioma.t("Hosts", "Hosts")) },
                     selected = ruta == "hosts",
                     onClick = { ir("hosts") },
                     icon = { Icon(Icons.Filled.Dns, null) }
@@ -81,6 +92,12 @@ fun NavegacionPrincipal() {
                     selected = ruta == "sftp",
                     onClick = { ir("sftp") },
                     icon = { Icon(Icons.Filled.Folder, null) }
+                )
+                NavigationDrawerItem(
+                    label = { Text(Idioma.t("Bóveda", "Vault")) },
+                    selected = ruta == "boveda",
+                    onClick = { ir("boveda") },
+                    icon = { Icon(Icons.Filled.VpnKey, null) }
                 )
                 NavigationDrawerItem(
                     label = { Text("Snippets") },
@@ -104,24 +121,34 @@ fun NavegacionPrincipal() {
         }
     ) {
         Scaffold(
+            containerColor = FondoApp,
             topBar = {
                 TopAppBar(
-                    title = { Text("CyberTerm") },
+                    title = { Text("CloudTerm Pro", color = Texto) },
                     navigationIcon = {
                         IconButton(onClick = { alcance.launch { drawer.open() } }) {
-                            Icon(Icons.Filled.Menu, contentDescription = "Menú")
+                            Icon(Icons.Filled.Menu, contentDescription = "Menú", tint = AzulAccion)
                         }
-                    }
+                    },
+                    colors = TopAppBarDefaults.topAppBarColors(
+                        containerColor = FondoBarra,
+                        titleContentColor = Texto
+                    )
                 )
             },
             bottomBar = {
-                NavigationBar {
+                NavigationBar(containerColor = FondoBarra) {
                     destinosBarra.forEach { d ->
                         NavigationBarItem(
                             selected = ruta == d.first,
                             onClick = { ir(d.first) },
                             icon = { Icon(d.third, contentDescription = d.second) },
-                            label = { Text(d.second) }
+                            label = { Text(d.second) },
+                            colors = NavigationBarItemDefaults.colors(
+                                selectedIconColor = AzulAccion,
+                                selectedTextColor = AzulAccion,
+                                indicatorColor = AzulAccion.copy(alpha = 0.15f)
+                            )
                         )
                     }
                 }
@@ -131,6 +158,7 @@ fun NavegacionPrincipal() {
                 composable("hosts") { PantallaHosts(onAbrirTerminal = { nav.navigate("terminales") }) }
                 composable("terminales") { PantallaTerminales() }
                 composable("sftp") { PantallaSftp() }
+                composable("boveda") { PantallaBoveda() }
                 composable("snippets") { PantallaSnippets() }
                 composable("tuneles") { PantallaTuneles() }
                 composable("ajustes") { PantallaAjustes() }

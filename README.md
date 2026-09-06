@@ -111,11 +111,13 @@ Ruta remota por defecto: `/Apps/CloudTermPro/`.
 
 ## Capturas
 
-> Sección reservada — añade PNG en `docs/screenshots/` (Sesiones, Terminal, SFTP, Ajustes).
+Mockups de UI CloudTerm Pro (Hosts, Terminal, SFTP, Ajustes, Bóveda):
 
-| Sesiones | Terminal | SFTP |
-|----------|----------|------|
-| _próximamente_ | _próximamente_ | _próximamente_ |
+![CloudTerm Pro mockups](docs/mockups/cloudterm-pro-mockups.png)
+
+| Hosts | Terminal | SFTP | Ajustes / Bóveda |
+|-------|----------|------|------------------|
+| [mockups](docs/mockups/cloudterm-pro-mockups.png) | [mockups](docs/mockups/cloudterm-pro-mockups.png) | [mockups](docs/mockups/cloudterm-pro-mockups.png) | [mockups](docs/mockups/cloudterm-pro-mockups.png) |
 
 ## Documentación
 
