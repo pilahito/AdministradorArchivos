@@ -1,0 +1,47 @@
+name: Release
+
+on:
+  push:
+    tags: [ "v*" ]
+  workflow_dispatch:
+    inputs:
+      tag:
+        description: "Tag de release (ej. v0.4.0-pro)"
+        required: false
+
+permissions:
+  contents: write
+
+jobs:
+  release:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-java@v4
+        with:
+          distribution: temurin
+          java-version: "17"
+      - uses: gradle/actions/setup-gradle@v4
+        with:
+          gradle-version: "8.7"
+      - name: Build APK
+        run: gradle :app:assembleDebug --no-daemon --stacktrace
+      - name: Package
+        run: |
+          mkdir -p dist
+          cp app/build/outputs/apk/debug/app-debug.apk dist/CloudTermPro-debug.apk
+      - uses: softprops/action-gh-release@v2
+        with:
+          tag_name: ${{ github.event.inputs.tag || github.ref_name }}
+          name: CloudTerm Pro ${{ github.event.inputs.tag || github.ref_name }}
+          body: |
+            ## CloudTerm Pro
+
+            - APK Android debug adjunto
+            - Modulos: core-ssh, vault, sync-providers, cloud-sync, terminal, ui-shared
+            - Sin servidores propios — privacidad local
+
+            Ver README y CHANGELOG.
+          files: dist/CloudTermPro-debug.apk
+          generate_release_notes: true
+          draft: false

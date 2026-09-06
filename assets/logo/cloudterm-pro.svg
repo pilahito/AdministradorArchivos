@@ -1,0 +1,20 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 256 256" role="img" aria-label="CloudTerm Pro">
+  <defs>
+    <linearGradient id="g" x1="0%" y1="0%" x2="100%" y2="100%">
+      <stop offset="0%" stop-color="#00F0FF"/>
+      <stop offset="100%" stop-color="#7C6CF0"/>
+    </linearGradient>
+  </defs>
+  <!-- background -->
+  <rect width="256" height="256" rx="48" fill="#0F172A"/>
+  <!-- cloud -->
+  <path fill="url(#g)" opacity="0.95" d="M78 150c-22 0-40-16-40-36 0-18 13-33 30-36 6-22 26-38 50-38 24 0 44 15 51 37 3-1 6-1 9-1 20 0 36 15 36 34 0 19-16 34-36 34H78z"/>
+  <!-- terminal prompt >_ -->
+  <text x="92" y="148" font-family="Consolas, Monaco, monospace" font-size="56" font-weight="700" fill="#0F172A">&gt;_</text>
+  <!-- shield -->
+  <path fill="#00E676" stroke="#0F172A" stroke-width="3"
+        d="M188 168 l28 8 v22 c0 18-12 34-28 42 -16-8-28-24-28-42 v-22z"/>
+  <path fill="none" stroke="#0F172A" stroke-width="4" stroke-linecap="round"
+        d="M178 190 l10 10 16-18"/>
+</svg>

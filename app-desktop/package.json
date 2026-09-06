@@ -1,0 +1,13 @@
+﻿{
+  "name": "cloudterm-pro-desktop",
+  "version": "0.4.0-pro",
+  "private": true,
+  "description": "CloudTerm Pro desktop scaffold (Tauri stub)",
+  "scripts": {
+    "dev": "echo Stub frontend",
+    "build": "echo Stub build",
+    "tauri:dev": "echo Future tauri dev",
+    "tauri:build": "echo Future tauri build EXE"
+  },
+  "engines": { "node": ">=18" }
+}

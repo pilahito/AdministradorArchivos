@@ -1,0 +1,10 @@
+
+# CloudTerm secrets
+vault.db
+*.jks
+local.properties
+.idea/
+*.iml
+build/
+.gradle/
+

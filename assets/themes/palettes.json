@@ -1,0 +1,76 @@
+{
+  "themes": [
+    {
+      "id": "dark_cyan_neon",
+      "displayName": "Dark Cyan Neon",
+      "colors": {
+        "background": "#0F172A",
+        "surface": "#1E293B",
+        "surfaceVariant": "#334155",
+        "primary": "#00F0FF",
+        "secondary": "#00E676",
+        "accent": "#7C6CF0",
+        "onBackground": "#E2E8F0",
+        "onSurface": "#E2E8F0",
+        "muted": "#94A3B8",
+        "error": "#EF4444",
+        "success": "#00E676",
+        "border": "#334155"
+      }
+    },
+    {
+      "id": "dracula",
+      "displayName": "Dracula",
+      "colors": {
+        "background": "#282A36",
+        "surface": "#44475A",
+        "surfaceVariant": "#6272A4",
+        "primary": "#BD93F9",
+        "secondary": "#50FA7B",
+        "accent": "#FF79C6",
+        "onBackground": "#F8F8F2",
+        "onSurface": "#F8F8F2",
+        "muted": "#6272A4",
+        "error": "#FF5555",
+        "success": "#50FA7B",
+        "border": "#6272A4"
+      }
+    },
+    {
+      "id": "solarized_light",
+      "displayName": "Solarized Light",
+      "colors": {
+        "background": "#FDF6E3",
+        "surface": "#EEE8D5",
+        "surfaceVariant": "#93A1A1",
+        "primary": "#268BD2",
+        "secondary": "#2AA198",
+        "accent": "#D33682",
+        "onBackground": "#657B83",
+        "onSurface": "#586E75",
+        "muted": "#93A1A1",
+        "error": "#DC322F",
+        "success": "#859900",
+        "border": "#93A1A1"
+      }
+    },
+    {
+      "id": "cyberpunk",
+      "displayName": "Cyberpunk",
+      "colors": {
+        "background": "#0D0221",
+        "surface": "#1A0A2E",
+        "surfaceVariant": "#2E1A47",
+        "primary": "#FCEE0A",
+        "secondary": "#FF2A6D",
+        "accent": "#05D9E8",
+        "onBackground": "#D1F7FF",
+        "onSurface": "#D1F7FF",
+        "muted": "#7A6B8A",
+        "error": "#FF2A6D",
+        "success": "#39FF14",
+        "border": "#05D9E8"
+      }
+    }
+  ]
+}

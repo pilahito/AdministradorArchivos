@@ -1,4 +1,4 @@
-name: Compilar APK
+﻿name: Compilar APK
 
 on:
   push:
@@ -21,28 +21,34 @@ jobs:
       - uses: gradle/actions/setup-gradle@v4
         with:
           gradle-version: "8.7"
-      - run: gradle assembleDebug --no-daemon --stacktrace
-      - run: |
+      - run: gradle :app:assembleDebug --no-daemon --stacktrace
+      - name: Prepare artifacts
+        run: |
           mkdir -p dist
-          cp app/build/outputs/apk/debug/app-debug.apk dist/CyberTerm-debug.apk
+          cp app/build/outputs/apk/debug/app-debug.apk dist/CloudTermPro-debug.apk
+          cp dist/CloudTermPro-debug.apk dist/CyberTerm-debug.apk
       - uses: actions/upload-artifact@v4
         with:
-          name: cyberterm-apk
-          path: dist/CyberTerm-debug.apk
+          name: cloudtermpro-apk
+          path: |
+            dist/CloudTermPro-debug.apk
+            dist/CyberTerm-debug.apk
           if-no-files-found: error
           retention-days: 14
       - uses: softprops/action-gh-release@v2
         with:
-          tag_name: ${{ github.ref_type == 'tag' && github.ref_name || format('v0.4.{0}', github.run_number) }}
-          name: CyberTerm ${{ github.ref_type == 'tag' && github.ref_name || format('v0.4.{0}', github.run_number) }}
+          tag_name: ${{ github.ref_type == 'tag' && github.ref_name || format('v0.4.{0}-pro', github.run_number) }}
+          name: CloudTerm Pro ${{ github.ref_type == 'tag' && github.ref_name || format('v0.4.{0}-pro', github.run_number) }}
           body: |
-            APK de **CyberTerm** (SSH / SFTP / túneles).
+            APK de **CloudTerm Pro** (SSH / SFTP / tuneles / sync).
 
-            1. Descarga **CyberTerm-debug.apk**
-            2. Permite orígenes desconocidos
+            1. Descarga **CloudTermPro-debug.apk**
+            2. Permite origenes desconocidos
             3. Instala
 
             Commit `${{ github.sha }}`.
-          files: dist/CyberTerm-debug.apk
+          files: |
+            dist/CloudTermPro-debug.apk
+            dist/CyberTerm-debug.apk
           generate_release_notes: true
           make_latest: true

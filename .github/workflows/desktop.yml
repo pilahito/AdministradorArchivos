@@ -1,0 +1,20 @@
+name: Desktop (stub)
+
+on:
+  workflow_dispatch:
+  push:
+    paths:
+      - "app-desktop/**"
+      - ".github/workflows/desktop.yml"
+
+jobs:
+  scaffold:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - name: Document future Tauri / Compose Multiplatform build
+        run: |
+          echo "CloudTerm Pro desktop — stub CI"
+          echo "Objetivo: EXE (Windows) + AppImage via Tauri o Compose Multiplatform"
+          echo "Scaffold en app-desktop/"
+          ls -la app-desktop || true
