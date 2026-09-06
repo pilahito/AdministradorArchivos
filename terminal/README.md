@@ -1,5 +1,8 @@
 # :terminal
 
-Stubs `TerminalSession` + `SshTerminalBridge` documentando la integración con **NewTermux**.
+Contrato de sesión (`TerminalSession`, `SshTerminalBridge`) para el emulador.
 
-No se copia código GPL de Termux; el emulador se enlaza como dependencia externa cuando esté listo.
+La UI Android (`:app`) enlaza Termux **terminal-emulator** + **terminal-view** (JitPack)
+y alimenta el VT con el shell SSHJ de `ClienteSshj` / `GestorSesion`.
+
+Ver `NOTICE` y `docs/FUENTES.md` (GPL-3).

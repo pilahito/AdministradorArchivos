@@ -169,8 +169,14 @@ fun PantallaBoveda() {
                             )
                             Spacer(Modifier.height(8.dp))
                             Row(horizontalArrangement = Arrangement.spacedBy(4.dp)) {
-                                ChipTech("RSA")
+                                val algo = when {
+                                    c.nombre.contains("ed25519", true) || c.ruta.contains("ed25519", true) -> "ED25519"
+                                    c.nombre.contains("ecdsa", true) -> "ECDSA"
+                                    else -> "RSA"
+                                }
+                                ChipTech(algo)
                                 ChipTech("AES-256")
+                                ChipTech(Idioma.t("Cifrado", "Encrypted"))
                             }
                             Spacer(Modifier.height(4.dp))
                             Text(c.ruta, color = TextoSuave, fontSize = 10.sp, maxLines = 1)
