@@ -8,53 +8,62 @@
   </head>
   <body data-theme="dark-neon">
     <div id="app">
-      <header class="titlebar">
-        <div class="brand">
+      <aside class="drawer" id="drawer">
+        <div class="drawer-brand">
           <span class="brand-mark" aria-hidden="true"></span>
-          <span class="brand-name">CloudTerm Pro</span>
+          <div>
+            <div class="brand-name">CloudTerm Pro</div>
+            <div class="brand-sub">SSH / SFTP / Tuneles</div>
+          </div>
         </div>
-        <nav class="main-tabs" role="tablist">
-          <button class="main-tab" data-view="vault" role="tab">
-            <span class="tab-ico">🔐</span> Bóveda
-          </button>
-          <button class="main-tab" data-view="sftp" role="tab">
-            <span class="tab-ico">📁</span> SFTP
-          </button>
-          <button class="main-tab active" data-view="workspace" role="tab">
-            <span class="tab-ico">▦</span> Workspace
-          </button>
+        <nav class="drawer-nav" id="drawer-nav" aria-label="Navegacion">
+          <button class="nav-item active" data-view="hosts"><span class="nav-ico">H</span> Hosts</button>
+          <button class="nav-item" data-view="terminales"><span class="nav-ico">T</span> Terminales</button>
+          <button class="nav-item" data-view="sftp"><span class="nav-ico">S</span> SFTP</button>
+          <button class="nav-item" data-view="forwarding"><span class="nav-ico">P</span> Reenvio de puertos</button>
+          <button class="nav-item" data-view="snippets"><span class="nav-ico">$</span> Snippets</button>
+          <button class="nav-item" data-view="vault"><span class="nav-ico">L</span> Llavero / Boveda</button>
+          <button class="nav-item" data-view="historial"><span class="nav-ico">i</span> Historial</button>
+          <button class="nav-item" data-view="knownhosts"><span class="nav-ico">K</span> Known hosts</button>
+          <button class="nav-item" data-view="temas"><span class="nav-ico">C</span> Temas</button>
+          <button class="nav-item" data-view="ajustes"><span class="nav-ico">A</span> Ajustes</button>
+          <button class="nav-item" data-view="ayuda"><span class="nav-ico">?</span> Ayuda</button>
         </nav>
-        <div class="session-tabs" id="session-tabs"></div>
-        <div class="titlebar-actions">
-          <button id="btn-new-session" class="icon-btn" title="Nueva sesión">+</button>
-          <button id="btn-theme" class="icon-btn" title="Tema">◐</button>
+        <div class="drawer-foot">
+          <span class="ver">v1.2.0-pro</span>
         </div>
-      </header>
+      </aside>
 
-      <div class="body">
-        <aside class="sidebar" id="sidebar">
-          <div class="sidebar-head">
-            <h2>Hosts</h2>
-            <button id="btn-add-host" class="icon-btn neon" title="Añadir host">+</button>
+      <div class="shell">
+        <header class="topbar">
+          <div class="topbar-left">
+            <h1 id="page-title">Hosts</h1>
+            <div class="session-tabs" id="session-tabs"></div>
           </div>
-          <input id="host-search" type="search" placeholder="Buscar…" />
-          <ul id="host-list" class="host-list"></ul>
-          <div class="sidebar-foot">
-            <label class="theme-select-label">Tema
-              <select id="theme-select">
-                <option value="dark-neon">CloudTerm Dark Neon</option>
-                <option value="dracula">Dracula</option>
-                <option value="solarized">Solarized</option>
-              </select>
-            </label>
+          <div class="topbar-actions">
+            <button id="btn-new-session" class="icon-btn" title="Nueva sesion">+</button>
+            <button id="btn-theme" class="icon-btn" title="Tema">T</button>
           </div>
-        </aside>
+        </header>
 
         <main class="content">
-          <section id="view-workspace" class="view active">
+          <section id="view-hosts" class="view active">
+            <div class="panel">
+              <div class="panel-head">
+                <div>
+                  <h2>Hosts</h2>
+                  <p class="muted">Conexiones SSH guardadas</p>
+                </div>
+                <input id="host-search" type="search" placeholder="Buscar hosts..." />
+              </div>
+              <ul id="host-list" class="host-list"></ul>
+            </div>
+          </section>
+
+          <section id="view-terminales" class="view">
             <div id="term-empty" class="empty-state">
-              <h1>Workspace</h1>
-              <p>Selecciona un host o crea una sesión SSH.</p>
+              <h2>Terminales</h2>
+              <p>Selecciona un host o crea una sesion SSH.</p>
               <button id="btn-connect-demo" class="btn-primary">Conectar demo local</button>
             </div>
             <div id="term-wrap" class="term-wrap hidden">
@@ -63,29 +72,18 @@
             </div>
           </section>
 
-          <section id="view-vault" class="view">
-            <div class="panel">
-              <div class="panel-head">
-                <h1>Bóveda de claves</h1>
-                <div class="panel-actions">
-                  <button class="btn-cyan">Añadir clave</button>
-                  <button class="btn-ghost">Exportar</button>
-                </div>
-              </div>
-              <div class="card-grid" id="vault-grid"></div>
-            </div>
-          </section>
-
           <section id="view-sftp" class="view">
             <div class="panel sftp-panel">
               <div class="panel-head">
-                <h1>SFTP</h1>
-                <span class="muted" id="sftp-path">/home</span>
+                <div>
+                  <h2>SFTP</h2>
+                  <p class="muted" id="sftp-path">/home</p>
+                </div>
               </div>
               <div class="sftp-layout">
                 <div class="sftp-browser">
                   <table>
-                    <thead><tr><th>Nombre</th><th>Tamaño</th><th>Modificado</th></tr></thead>
+                    <thead><tr><th>Nombre</th><th>Tamano</th><th>Modificado</th></tr></thead>
                     <tbody id="sftp-rows"></tbody>
                   </table>
                 </div>
@@ -96,7 +94,93 @@
               </div>
             </div>
           </section>
+
+          <section id="view-forwarding" class="view">
+            <div class="panel">
+              <div class="panel-head"><h2>Reenvio de puertos</h2></div>
+              <div class="card stub-card">
+                <p>Local / remoto / dinamico (SOCKS). Configura tuneles por host.</p>
+                <button class="btn-cyan">Anadir tunel</button>
+              </div>
+            </div>
+          </section>
+
+          <section id="view-snippets" class="view">
+            <div class="panel">
+              <div class="panel-head"><h2>Snippets</h2></div>
+              <div class="card-grid" id="snippets-grid"></div>
+            </div>
+          </section>
+
+          <section id="view-vault" class="view">
+            <div class="panel">
+              <div class="panel-head">
+                <h2>Llavero / Boveda</h2>
+                <div class="panel-actions">
+                  <button class="btn-cyan">Anadir clave</button>
+                  <button class="btn-ghost">Exportar</button>
+                </div>
+              </div>
+              <div class="card-grid" id="vault-grid"></div>
+            </div>
+          </section>
+
+          <section id="view-historial" class="view">
+            <div class="panel">
+              <div class="panel-head"><h2>Historial</h2></div>
+              <ul class="simple-list" id="historial-list"></ul>
+            </div>
+          </section>
+
+          <section id="view-knownhosts" class="view">
+            <div class="panel">
+              <div class="panel-head"><h2>Known hosts</h2></div>
+              <ul class="simple-list" id="knownhosts-list"></ul>
+            </div>
+          </section>
+
+          <section id="view-temas" class="view">
+            <div class="panel">
+              <div class="panel-head"><h2>Temas</h2></div>
+              <label class="theme-select-label">Tema de la app
+                <select id="theme-select">
+                  <option value="dark-neon">CloudTerm Dark Neon</option>
+                  <option value="dracula">Dracula</option>
+                  <option value="solarized">Solarized</option>
+                </select>
+              </label>
+              <div class="theme-swatches">
+                <div class="swatch charcoal"></div>
+                <div class="swatch cyan"></div>
+                <div class="swatch green"></div>
+              </div>
+            </div>
+          </section>
+
+          <section id="view-ajustes" class="view">
+            <div class="panel">
+              <div class="panel-head"><h2>Ajustes</h2></div>
+              <div class="card stub-card">
+                <label class="check"><input type="checkbox" checked /> Mostrar MOTD al conectar</label>
+                <label class="check"><input type="checkbox" checked /> Confirmar al cerrar sesion</label>
+                <label class="check"><input type="checkbox" /> Iniciar con el sistema</label>
+              </div>
+            </div>
+          </section>
+
+          <section id="view-ayuda" class="view">
+            <div class="panel">
+              <div class="panel-head"><h2>Ayuda</h2></div>
+              <div class="card stub-card">
+                <p><strong>CloudTerm Pro</strong> — cliente SSH/SFTP de escritorio (Tauri 2 + xterm.js).</p>
+                <p class="muted">Windows + Ubuntu/Linux. Sin marcas de terceros.</p>
+                <p class="muted">Version 1.2.0-pro</p>
+              </div>
+            </div>
+          </section>
         </main>
+
+        <button id="fab" class="fab" title="Anadir host">+</button>
       </div>
 
       <div id="modal-host" class="modal hidden">

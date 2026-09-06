@@ -3,6 +3,7 @@ name: Desktop
 on:
   workflow_dispatch:
   push:
+    branches: [main]
     paths:
       - "app-desktop/**"
       - ".github/workflows/desktop.yml"
@@ -26,6 +27,37 @@ jobs:
         with:
           projectPath: app-desktop
           tauriScript: npm run tauri
-          args: build
+          args: --bundles nsis,msi
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+
+  linux:
+    runs-on: ubuntu-22.04
+    steps:
+      - uses: actions/checkout@v4
+      - uses: dtolnay/rust-toolchain@stable
+      - name: Install Linux deps
+        run: sudo apt-get update
+      - name: Install webkit
+        run: sudo apt-get install -y libwebkit2gtk-4.1-dev librsvg2-dev patchelf libayatana-appindicator3-dev
+      - uses: actions/setup-node@v4
+        with:
+          node-version: "20"
+          cache-dependency-path: app-desktop/package-lock.json
+      - name: Install frontend
+        working-directory: app-desktop
+        run: npm install --prefer-offline --no-audit
+      - name: Build Linux
+        uses: tauri-apps/tauri-action@v0
+        with:
+          projectPath: app-desktop
+          tauriScript: npm run tauri
+          args: --bundles deb,appimage
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+      - name: Upload Linux artifacts
+        uses: actions/upload-artifact@v4
+        with:
+          name: CloudTermPro-linux
+          path: app-desktop/src-tauri/target/release/bundle
+          if-no-files-found: warn

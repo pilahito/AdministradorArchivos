@@ -3,6 +3,20 @@ import { FitAddon } from '@xterm/addon-fit';
 import { WebLinksAddon } from '@xterm/addon-web-links';
 import '@xterm/xterm/css/xterm.css';
 
+const PAGE_TITLES = {
+  hosts: 'Hosts',
+  terminales: 'Terminales',
+  sftp: 'SFTP',
+  forwarding: 'Reenvio de puertos',
+  snippets: 'Snippets',
+  vault: 'Llavero / Boveda',
+  historial: 'Historial',
+  knownhosts: 'Known hosts',
+  temas: 'Temas',
+  ajustes: 'Ajustes',
+  ayuda: 'Ayuda',
+};
+
 const hosts = [
   { id: '1', name: 'acme-api-dev-us-west', host: '127.0.0.1', port: 22, user: 'stan', tags: ['dev', 'aws'] },
   { id: '2', name: 'Servidor Web-01', host: '192.168.16.21', port: 22, user: 'root', tags: ['prod'] },
@@ -10,16 +24,34 @@ const hosts = [
 ];
 
 const vaultKeys = [
-  { name: 'Clave AWS Producción', algo: 'ED25519', enc: 'AES-256' },
+  { name: 'Clave AWS Produccion', algo: 'ED25519', enc: 'AES-256' },
   { name: 'Lab personal', algo: 'RSA 4096', enc: 'AES-256' },
   { name: 'CI deploy', algo: 'ED25519', enc: 'Cifrado' },
 ];
 
+const snippets = [
+  { name: 'Actualizar apt', body: 'sudo apt update && sudo apt upgrade -y' },
+  { name: 'Disk usage', body: 'df -h' },
+  { name: 'Ultimos logs', body: 'journalctl -n 100 --no-pager' },
+];
+
 const sftpFiles = [
-  { name: '.ssh', size: '—', modified: '2026-08-12' },
-  { name: 'bin', size: '—', modified: '2026-07-01' },
+  { name: '.ssh', size: '-', modified: '2026-08-12' },
+  { name: 'bin', size: '-', modified: '2026-07-01' },
   { name: 'public', size: '12 MB', modified: '2026-09-05' },
   { name: 'deploy.sh', size: '4 KB', modified: '2026-09-01' },
+];
+
+const historial = [
+  'stan@acme-api-dev-us-west — hace 2 min',
+  'root@Servidor Web-01 — ayer',
+  'ops@bastion-eu — hace 3 dias',
+];
+
+const knownHosts = [
+  '127.0.0.1 ssh-ed25519 AAAAC3NzaC1lZDI1NTE5AAAAIDemoKeyLocalhost',
+  '192.168.16.21 ssh-rsa AAAAB3NzaC1yc2EAAAADAQABAAABgQC...',
+  '10.0.0.8 ecdsa-sha2-nistp256 AAAAE2VjZHNhLXNoYTItbmlzdHAyNTY...',
 ];
 
 let term = null;
@@ -45,10 +77,11 @@ function $all(sel) { return [...document.querySelectorAll(sel)]; }
 function applyTheme(id) {
   document.body.dataset.theme = id;
   localStorage.setItem('ct-theme', id);
-  $('#theme-select').value = id;
+  const sel = $('#theme-select');
+  if (sel) sel.value = id;
   if (term) {
     const themes = {
-      'dark-neon': { background: '#0A1628', foreground: '#D6E4F0', cursor: '#39FF14', selectionBackground: '#1E3A5F' },
+      'dark-neon': { background: '#0A0C0E', foreground: '#E8EEF4', cursor: '#39FF14', selectionBackground: '#2A3038' },
       dracula: { background: '#282A36', foreground: '#F8F8F2', cursor: '#50FA7B', selectionBackground: '#44475A' },
       solarized: { background: '#002B36', foreground: '#FDF6E3', cursor: '#2AA198', selectionBackground: '#073642' },
     };
@@ -72,10 +105,9 @@ function renderHosts(filter = '') {
 }
 
 function renderVault() {
-  const grid = $('#vault-grid');
-  grid.innerHTML = vaultKeys.map(k => `
+  $('#vault-grid').innerHTML = vaultKeys.map(k => `
     <article class="card">
-      <h3>🛡️ ${escapeHtml(k.name)}</h3>
+      <h3>${escapeHtml(k.name)}</h3>
       <div class="tags">
         <span class="tag">${escapeHtml(k.algo)}</span>
         <span class="tag">${escapeHtml(k.enc)}</span>
@@ -83,13 +115,26 @@ function renderVault() {
     </article>`).join('');
 }
 
+function renderSnippets() {
+  $('#snippets-grid').innerHTML = snippets.map(s => `
+    <article class="card">
+      <h3>${escapeHtml(s.name)}</h3>
+      <pre class="meta" style="white-space:pre-wrap;margin:0;font-family:var(--mono);font-size:12px;color:var(--cyan)">${escapeHtml(s.body)}</pre>
+    </article>`).join('');
+}
+
 function renderSftp() {
   $('#sftp-rows').innerHTML = sftpFiles.map(f => `
-    <tr><td>📄 ${escapeHtml(f.name)}</td><td>${escapeHtml(f.size)}</td><td>${escapeHtml(f.modified)}</td></tr>
+    <tr><td>${escapeHtml(f.name)}</td><td>${escapeHtml(f.size)}</td><td>${escapeHtml(f.modified)}</td></tr>
   `).join('');
   $('#transfer-list').innerHTML = `
-    <li class="card"><div>deploy.sh ↑</div><div class="meta">2.59 MB/s</div><div class="progress"><span style="width:75%"></span></div></li>
-    <li class="card" style="margin-top:8px"><div>backup.tgz ↓</div><div class="meta">1.10 MB/s</div><div class="progress"><span style="width:40%"></span></div></li>`;
+    <li class="card"><div>deploy.sh ^</div><div class="meta">2.59 MB/s</div><div class="progress"><span style="width:75%"></span></div></li>
+    <li class="card" style="margin-top:8px"><div>backup.tgz v</div><div class="meta">1.10 MB/s</div><div class="progress"><span style="width:40%"></span></div></li>`;
+}
+
+function renderLists() {
+  $('#historial-list').innerHTML = historial.map(h => `<li>${escapeHtml(h)}</li>`).join('');
+  $('#knownhosts-list').innerHTML = knownHosts.map(h => `<li><code style="font-size:12px">${escapeHtml(h)}</code></li>`).join('');
 }
 
 function escapeHtml(s) {
@@ -97,8 +142,13 @@ function escapeHtml(s) {
 }
 
 function setView(name) {
-  $all('.main-tab').forEach(b => b.classList.toggle('active', b.dataset.view === name));
+  $all('.nav-item').forEach(b => b.classList.toggle('active', b.dataset.view === name));
   $all('.view').forEach(v => v.classList.toggle('active', v.id === `view-${name}`));
+  const title = $('#page-title');
+  if (title) title.textContent = PAGE_TITLES[name] || name;
+  if (name === 'terminales' && fitAddon) {
+    requestAnimationFrame(() => fitAddon.fit());
+  }
 }
 
 function ensureTerminal() {
@@ -108,18 +158,18 @@ function ensureTerminal() {
     fontFamily: '"Cascadia Code", "JetBrains Mono", Consolas, monospace',
     fontSize: 13,
     theme: {
-      background: '#0A1628',
-      foreground: '#D6E4F0',
+      background: '#0A0C0E',
+      foreground: '#E8EEF4',
       cursor: '#39FF14',
-      selectionBackground: '#1E3A5F',
-      black: '#0A1628',
+      selectionBackground: '#2A3038',
+      black: '#0A0C0E',
       red: '#FF4D6D',
       green: '#39FF14',
       yellow: '#F5D90A',
       blue: '#00E5FF',
       magenta: '#FF6B9D',
       cyan: '#00E5FF',
-      white: '#D6E4F0',
+      white: '#E8EEF4',
     },
   });
   fitAddon = new FitAddon();
@@ -145,9 +195,9 @@ function motdHtml(session) {
 <span class="k">IP addresses:</span> <span class="ip">10.0.1.24</span>
 <span class="k">Public IP:</span>    <span class="ip">203.0.113.10</span>
 <span class="k">Uptime:</span>      <span class="v">14 days</span>
-<span class="k">Memory:</span>      <span class="v">[████████░░] 78%</span>
-<span class="k">Disk space:</span>  <span class="v">[██████░░░░] 61%</span>
-<span class="k">Services:</span>    <span class="v">▲ UFW  ▲ Nginx  ▲ SSH</span>
+<span class="k">Memory:</span>      <span class="v">[########--] 78%</span>
+<span class="k">Disk space:</span>  <span class="v">[######----] 61%</span>
+<span class="k">Services:</span>    <span class="v">UFW  Nginx  SSH</span>
 <span class="k">Tmux sessions:</span> <span class="v">0</span>`;
 }
 
@@ -156,7 +206,7 @@ function renderSessionTabs() {
   el.innerHTML = sessions.map(s => `
     <div class="session-tab ${activeSession && activeSession.id === s.id ? 'active' : ''}" data-id="${s.id}">
       <span>${escapeHtml(s.name)}</span>
-      <button class="x" data-close="${s.id}">×</button>
+      <button class="x" data-close="${s.id}">x</button>
     </div>`).join('');
   el.querySelectorAll('.session-tab').forEach(tab => {
     tab.onclick = (ev) => {
@@ -165,6 +215,7 @@ function renderSessionTabs() {
         return;
       }
       focusSession(tab.dataset.id);
+      setView('terminales');
     };
   });
 }
@@ -221,10 +272,11 @@ async function startSession(opts) {
   renderSessionTabs();
   term.reset();
   fitAddon.fit();
+  setView('terminales');
 
   if (!tauri) {
-    term.writeln('\x1b[36mCloudTerm Pro\x1b[0m — modo UI (sin backend Tauri).');
-    term.writeln(`Sesión \x1b[32m${opts.user}@${opts.host}:${opts.port}\x1b[0m`);
+    term.writeln('\x1b[36mCloudTerm Pro\x1b[0m - modo UI (sin backend Tauri).');
+    term.writeln(`Sesion \x1b[32m${opts.user}@${opts.host}:${opts.port}\x1b[0m`);
     term.writeln('Abre con `tauri dev` / EXE para PTY SSH real.\r\n');
     term.write(`\x1b[32m${opts.user}@${opts.name}\x1b[0m:\x1b[34m~\x1b[0m# `);
     let buf = '';
@@ -256,10 +308,10 @@ async function startSession(opts) {
       cols,
       rows,
     });
-    term.writeln(`\x1b[36mConectando\x1b[0m ${opts.user}@${opts.host}:${opts.port} …`);
+    term.writeln(`\x1b[36mConectando\x1b[0m ${opts.user}@${opts.host}:${opts.port} ...`);
   } catch (e) {
     term.writeln(`\x1b[31mNo se pudo abrir PTY/SSH: ${e}\x1b[0m`);
-    term.writeln('Comprueba que `ssh` esté en PATH (OpenSSH).');
+    term.writeln('Comprueba que `ssh` este en PATH (OpenSSH).');
   }
 }
 
@@ -273,15 +325,15 @@ async function bindPtyEvents() {
   await tauri.listen('pty-exit', (ev) => {
     const { id, code } = ev.payload;
     if (term && activeSession && activeSession.id === id) {
-      term.writeln(`\r\n\x1b[33m[sesión terminada code=${code}]\x1b[0m`);
+      term.writeln(`\r\n\x1b[33m[sesion terminada code=${code}]\x1b[0m`);
     }
   });
 }
 
 function wireUi() {
-  $all('.main-tab').forEach(btn => btn.addEventListener('click', () => setView(btn.dataset.view)));
+  $all('.nav-item').forEach(btn => btn.addEventListener('click', () => setView(btn.dataset.view)));
   $('#host-search').addEventListener('input', (e) => renderHosts(e.target.value));
-  $('#btn-add-host').onclick = () => openConnectModal(null);
+  $('#fab').onclick = () => openConnectModal(null);
   $('#btn-new-session').onclick = () => openConnectModal(hosts[0]);
   $('#btn-connect-demo').onclick = () => startSession({
     name: 'acme-api-dev-us-west', host: '127.0.0.1', port: 22, user: 'stan', motd: true,
@@ -297,7 +349,6 @@ function wireUi() {
     };
     hideModal();
     startSession(opts);
-    setView('workspace');
   };
   $('#theme-select').onchange = (e) => applyTheme(e.target.value);
   $('#btn-theme').onclick = () => {
@@ -312,7 +363,9 @@ async function main() {
   applyTheme(localStorage.getItem('ct-theme') || 'dark-neon');
   renderHosts();
   renderVault();
+  renderSnippets();
   renderSftp();
+  renderLists();
   wireUi();
   await bindPtyEvents();
 }
