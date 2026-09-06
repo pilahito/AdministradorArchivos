@@ -1,21 +1,33 @@
 # Historial de versiones
 
+## v1.0.0-pro — CloudTerm Pro (lanzamiento oficial) — 2026-09-06
+
+Primera publicacion oficial de **CloudTerm Pro** (evolucion de CyberTerm).
+
+### Registros de mejora
+
+| Area | Mejora |
+|------|--------|
+| Identidad | Renombre visible a CloudTerm Pro; UI por defecto en espanol |
+| Arquitectura | Modulos Gradle `:core-ssh`, `:vault`, `:sync-providers`, `:cloud-sync`, `:terminal`, `:ui-shared` |
+| SSH/SFTP | Cliente SSHJ (shell, exec, SFTP streams, tuneles) |
+| Vault | AES-256-GCM + PBKDF2, access logs, pantalla Boveda de claves |
+| Sync nube | WebDAV real + stubs MEGA / Drive / Dropbox / OneDrive / TeraBox / 1fichier |
+| UI | Tema Dark Cyan Neon alineado a mockups (hosts grid, terminal tabs, SFTP dual, ajustes) |
+| Desktop | Scaffold `app-desktop/` (Tauri / Compose Multiplatform) — preview |
+| CI/CD | Android CI (JVM + APK), release por tags, workflows desktop/deb (stub) |
+| Docs | README multi-SO, SECURITY, BUILD, ARQUITECTURA, capturas Android/Windows/Linux |
+
+### Plataformas
+
+- **Android** — APK debug/release via CI (estable en esta release)
+- **Windows** — preview desktop (scaffold); captura de producto incluida
+- **Linux** — preview desktop / DEB planificado; captura de producto incluida
+
 ## v0.4.0-pro — CloudTerm Pro — 2026-09-06
 
-Evolucion de **CyberTerm** a **CloudTerm Pro** (open source, multiplataforma).
-
-- Nuevos modulos Gradle: `:core-ssh`, `:vault`, `:sync-providers`, `:cloud-sync`, `:terminal`, `:ui-shared`
-- API SSH Kotlin sobre SSHJ (connect, startShell, exec, openSftp, createTunnel)
-- Boveda AES-256-GCM + PBKDF2, access logs, stubs biometricos
-- Sync: WebDAV (PROPFIND/GET/PUT/DELETE) + stubs MEGA/Drive/Dropbox/OneDrive/TeraBox/1fichier
-- Orquestador `:cloud-sync` con retry y ruta `/Apps/CloudTermPro/`
-- Puente terminal documentado para NewTermux
-- Temas: Dark Cyan Neon, Dracula, Solarized Light, Cyberpunk
-- Assets logo SVG + paletas JSON
-- Docs ES: README, CONTRIBUTING, SECURITY, ARQUITECTURA, BUILD
-- CI: android.yml, release.yml, stubs desktop.yml / deb.yml
-- Scaffold app-desktop/ (Tauri / Compose Multiplatform)
-- Nombre visible **CloudTerm Pro** (applicationId sin cambios)
+- Scaffold modular + vault + sync + CI inicial
+- UI mockups (hosts, terminal, SFTP, ajustes, boveda)
 
 ## v0.3 — CyberTerm
 
@@ -23,9 +35,9 @@ Evolucion de **CyberTerm** a **CloudTerm Pro** (open source, multiplataforma).
 
 ## v0.1 — 2026-08-30
 
-Primera version publica.
+Primera version publica (CyberTerm).
 
 - Interfaz oscura tipo Termius (Hosts, Terminal, SFTP, Ajustes)
 - Conexion SSH / SFTP con contrasena o clave
-- Google Drive con login OAuth (hace falta Client ID Android)
+- Google Drive OAuth (Client ID Android)
 - Compilacion automatica del APK en GitHub Actions

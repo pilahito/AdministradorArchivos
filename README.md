@@ -1,31 +1,32 @@
 # CloudTerm Pro
+[![Release](https://img.shields.io/github/v/release/pilahito/AdministradorArchivos?label=CloudTerm%20Pro)](https://github.com/pilahito/AdministradorArchivos/releases)
 
-Cliente **SSH / SFTP / túneles** multiplataforma, open source y sin servidores propios.
-Evolución de CyberTerm → arquitectura modular lista para Android, escritorio y sync en la nube.
+Cliente **SSH / SFTP / tÃºneles** multiplataforma, open source y sin servidores propios.
+EvoluciÃ³n de CyberTerm â†’ arquitectura modular lista para Android, escritorio y sync en la nube.
 
 [![Compilar APK](https://github.com/pilahito/AdministradorArchivos/actions/workflows/compilar-apk.yml/badge.svg)](https://github.com/pilahito/AdministradorArchivos/actions/workflows/compilar-apk.yml)
 [![Android CI](https://github.com/pilahito/AdministradorArchivos/actions/workflows/android.yml/badge.svg)](https://github.com/pilahito/AdministradorArchivos/actions/workflows/android.yml)
 [![Licencia](https://img.shields.io/github/license/pilahito/AdministradorArchivos)](LICENSE)
 [![Release](https://img.shields.io/github/v/release/pilahito/AdministradorArchivos?include_prereleases)](https://github.com/pilahito/AdministradorArchivos/releases)
 
-**Descarga:** [Releases](https://github.com/pilahito/AdministradorArchivos/releases) → APK Android (`CloudTermPro-debug.apk` / `CyberTerm-debug.apk`).
+**Descarga:** [Releases](https://github.com/pilahito/AdministradorArchivos/releases) â†’ APK Android (`CloudTermPro-debug.apk` / `CyberTerm-debug.apk`).
 
 ---
 
-## Características
+## CaracterÃ­sticas
 
-- Sesiones SSH con contraseña o clave privada
+- Sesiones SSH con contraseÃ±a o clave privada
 - Terminal interactiva + SFTP
-- Túneles locales `-L`
-- Bóveda cifrada AES-256 (PBKDF2) — módulo `:vault`
-- Sync opcional vía **tus** proveedores (WebDAV listo; Drive/Dropbox/MEGA/… stubs)
+- TÃºneles locales `-L`
+- BÃ³veda cifrada AES-256 (PBKDF2) â€” mÃ³dulo `:vault`
+- Sync opcional vÃ­a **tus** proveedores (WebDAV listo; Drive/Dropbox/MEGA/â€¦ stubs)
 - Temas: Dark Cyan Neon, Dracula, Solarized Light, Cyberpunk
-- Open source — sin paywall ni telemetría a servidores de CloudTerm
+- Open source â€” sin paywall ni telemetrÃ­a a servidores de CloudTerm
 
 ## Privacidad
 
-CloudTerm Pro **no opera servidores propios**. Las credenciales y la bóveda viven en tu dispositivo.
-La sincronización (si la activas) habla solo con el proveedor que tú elijas (Nextcloud/WebDAV, Drive, etc.).
+CloudTerm Pro **no opera servidores propios**. Las credenciales y la bÃ³veda viven en tu dispositivo.
+La sincronizaciÃ³n (si la activas) habla solo con el proveedor que tÃº elijas (Nextcloud/WebDAV, Drive, etc.).
 
 ## Arquitectura
 
@@ -60,16 +61,16 @@ flowchart TB
   TERM --> SSH
 ```
 
-## Módulos Gradle
+## MÃ³dulos Gradle
 
-| Módulo | Rol |
+| MÃ³dulo | Rol |
 |--------|-----|
-| `:app` | UI Android (Compose) — applicationId sin cambios |
+| `:app` | UI Android (Compose) â€” applicationId sin cambios |
 | `:core-ssh` | API Kotlin: connect / startShell / exec / openSftp / createTunnel |
-| `:vault` | vault.db cifrado + logs de acceso + stubs biométricos |
+| `:vault` | vault.db cifrado + logs de acceso + stubs biomÃ©tricos |
 | `:sync-providers` | `SyncProvider` + WebDAV + stubs nube |
 | `:cloud-sync` | Orquestador (retry, `/Apps/CloudTermPro/`) |
-| `:terminal` | `TerminalSession` / `SshTerminalBridge` → NewTermux |
+| `:terminal` | `TerminalSession` / `SshTerminalBridge` â†’ NewTermux |
 | `:ui-shared` | Tokens de color multiplataforma |
 
 ## Build
@@ -81,7 +82,7 @@ flowchart TB
 # salida: app/build/outputs/apk/debug/app-debug.apk
 ```
 
-### Librerías JVM (sin SDK Android)
+### LibrerÃ­as JVM (sin SDK Android)
 
 ```bash
 ./gradlew :core-ssh:compileKotlin :vault:compileKotlin :sync-providers:compileKotlin
@@ -102,24 +103,26 @@ Ver [docs/BUILD.md](docs/BUILD.md).
 
 | Proveedor | Estado |
 |-----------|--------|
-| WebDAV (Nextcloud, ownCloud, …) | Implementación básica |
+| WebDAV (Nextcloud, ownCloud, â€¦) | ImplementaciÃ³n bÃ¡sica |
 | MEGA | Stub |
 | Google Drive | Stub (+ OAuth parcial en `:app`) |
 | Dropbox / OneDrive / TeraBox / 1fichier | Stubs |
 
 Ruta remota por defecto: `/Apps/CloudTermPro/`.
 
-## Capturas
+## Capturas por sistema operativo
 
-Mockups de UI CloudTerm Pro (Hosts, Terminal, SFTP, Ajustes, Bóveda):
+| Android | Windows | Linux |
+|:---:|:---:|:---:|
+| ![Android](docs/screenshots/android.png) | ![Windows](docs/screenshots/windows.png) | ![Linux](docs/screenshots/linux.png) |
 
-![CloudTerm Pro mockups](docs/mockups/cloudterm-pro-mockups.png)
+Mockups de producto (referencia UI): [docs/mockups/cloudterm-pro-mockups.png](docs/mockups/cloudterm-pro-mockups.png)
 
-| Hosts | Terminal | SFTP | Ajustes / Bóveda |
-|-------|----------|------|------------------|
-| [mockups](docs/mockups/cloudterm-pro-mockups.png) | [mockups](docs/mockups/cloudterm-pro-mockups.png) | [mockups](docs/mockups/cloudterm-pro-mockups.png) | [mockups](docs/mockups/cloudterm-pro-mockups.png) |
+Registro de mejoras: [docs/MEJORAS.md](docs/MEJORAS.md) · Historial: [CHANGELOG.md](CHANGELOG.md)
 
-## Documentación
+
+
+## DocumentaciÃ³n
 
 - [Arquitectura](docs/ARQUITECTURA.md)
 - [Build](docs/BUILD.md)
