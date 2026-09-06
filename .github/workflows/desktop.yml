@@ -1,4 +1,4 @@
-name: Desktop (stub)
+name: Desktop
 
 on:
   workflow_dispatch:
@@ -8,13 +8,24 @@ on:
       - ".github/workflows/desktop.yml"
 
 jobs:
-  scaffold:
-    runs-on: ubuntu-latest
+  windows:
+    runs-on: windows-latest
     steps:
       - uses: actions/checkout@v4
-      - name: Document future Tauri / Compose Multiplatform build
-        run: |
-          echo "CloudTerm Pro desktop — stub CI"
-          echo "Objetivo: EXE (Windows) + AppImage via Tauri o Compose Multiplatform"
-          echo "Scaffold en app-desktop/"
-          ls -la app-desktop || true
+      - uses: dtolnay/rust-toolchain@stable
+      - uses: actions/setup-node@v4
+        with:
+          node-version: "20"
+          cache: npm
+          cache-dependency-path: app-desktop/package-lock.json
+      - name: Install frontend
+        working-directory: app-desktop
+        run: npm ci
+      - name: Build
+        uses: tauri-apps/tauri-action@v0
+        with:
+          projectPath: app-desktop
+          tauriScript: npm run tauri
+          args: build
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
