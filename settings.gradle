@@ -13,5 +13,11 @@ dependencyResolutionManagement {
         maven { url 'https://jitpack.io' }
     }
 }
-rootProject.name = "CyberTerm"
+rootProject.name = "CloudTermPro"
 include ':app'
+include ':core-ssh'
+include ':vault'
+include ':sync-providers'
+include ':cloud-sync'
+include ':terminal'
+include ':ui-shared'

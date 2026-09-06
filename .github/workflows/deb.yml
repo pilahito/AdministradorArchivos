@@ -1,0 +1,20 @@
+name: DEB package (stub)
+
+on:
+  workflow_dispatch:
+
+jobs:
+  deb-stub:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - name: Placeholder DEB
+        run: |
+          echo "Futuro: empaquetar CloudTerm Pro para Debian/Ubuntu"
+          echo "Opciones: cargo-deb (Tauri) o jpackage + fpm"
+          mkdir -p dist
+          echo "stub" > dist/README-deb.txt
+      - uses: actions/upload-artifact@v4
+        with:
+          name: deb-stub-notes
+          path: dist/README-deb.txt
