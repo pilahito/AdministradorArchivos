@@ -1,5 +1,18 @@
 # Historial de versiones
 
+## v1.1.0-pro — Windows desktop Tauri 2 — 2026-09-06
+
+### Registros de mejora
+
+| Area | Mejora |
+|------|--------|
+| Desktop Windows | App Tauri 2 real en `app-desktop/` (Rust + Vite + xterm.js) |
+| UI | Tabs Bóveda / SFTP / Workspace, hosts sidebar, sesión `acme-api-dev-us-west`, tema Dark Neon |
+| Terminal | xterm.js + PTY OpenSSH (cliente OpenSSH del sistema) |
+| Temas | CloudTerm Dark Neon + stubs Dracula / Solarized |
+| Empaquetado | build Tauri → EXE portable + NSIS/MSI |
+
+
 ## v1.0.0-pro — CloudTerm Pro (lanzamiento oficial) — 2026-09-06
 
 Primera publicacion oficial de **CloudTerm Pro** (evolucion de CyberTerm).

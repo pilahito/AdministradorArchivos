@@ -1,0 +1,119 @@
+<!DOCTYPE html>
+<html lang="es">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>CloudTerm Pro</title>
+    <link rel="stylesheet" href="/src/styles.css" />
+  </head>
+  <body data-theme="dark-neon">
+    <div id="app">
+      <header class="titlebar">
+        <div class="brand">
+          <span class="brand-mark" aria-hidden="true"></span>
+          <span class="brand-name">CloudTerm Pro</span>
+        </div>
+        <nav class="main-tabs" role="tablist">
+          <button class="main-tab" data-view="vault" role="tab">
+            <span class="tab-ico">🔐</span> Bóveda
+          </button>
+          <button class="main-tab" data-view="sftp" role="tab">
+            <span class="tab-ico">📁</span> SFTP
+          </button>
+          <button class="main-tab active" data-view="workspace" role="tab">
+            <span class="tab-ico">▦</span> Workspace
+          </button>
+        </nav>
+        <div class="session-tabs" id="session-tabs"></div>
+        <div class="titlebar-actions">
+          <button id="btn-new-session" class="icon-btn" title="Nueva sesión">+</button>
+          <button id="btn-theme" class="icon-btn" title="Tema">◐</button>
+        </div>
+      </header>
+
+      <div class="body">
+        <aside class="sidebar" id="sidebar">
+          <div class="sidebar-head">
+            <h2>Hosts</h2>
+            <button id="btn-add-host" class="icon-btn neon" title="Añadir host">+</button>
+          </div>
+          <input id="host-search" type="search" placeholder="Buscar…" />
+          <ul id="host-list" class="host-list"></ul>
+          <div class="sidebar-foot">
+            <label class="theme-select-label">Tema
+              <select id="theme-select">
+                <option value="dark-neon">CloudTerm Dark Neon</option>
+                <option value="dracula">Dracula</option>
+                <option value="solarized">Solarized</option>
+              </select>
+            </label>
+          </div>
+        </aside>
+
+        <main class="content">
+          <section id="view-workspace" class="view active">
+            <div id="term-empty" class="empty-state">
+              <h1>Workspace</h1>
+              <p>Selecciona un host o crea una sesión SSH.</p>
+              <button id="btn-connect-demo" class="btn-primary">Conectar demo local</button>
+            </div>
+            <div id="term-wrap" class="term-wrap hidden">
+              <div id="motd" class="motd hidden"></div>
+              <div id="terminal" class="terminal"></div>
+            </div>
+          </section>
+
+          <section id="view-vault" class="view">
+            <div class="panel">
+              <div class="panel-head">
+                <h1>Bóveda de claves</h1>
+                <div class="panel-actions">
+                  <button class="btn-cyan">Añadir clave</button>
+                  <button class="btn-ghost">Exportar</button>
+                </div>
+              </div>
+              <div class="card-grid" id="vault-grid"></div>
+            </div>
+          </section>
+
+          <section id="view-sftp" class="view">
+            <div class="panel sftp-panel">
+              <div class="panel-head">
+                <h1>SFTP</h1>
+                <span class="muted" id="sftp-path">/home</span>
+              </div>
+              <div class="sftp-layout">
+                <div class="sftp-browser">
+                  <table>
+                    <thead><tr><th>Nombre</th><th>Tamaño</th><th>Modificado</th></tr></thead>
+                    <tbody id="sftp-rows"></tbody>
+                  </table>
+                </div>
+                <aside class="sftp-transfers">
+                  <h3>Transferencias</h3>
+                  <ul id="transfer-list"></ul>
+                </aside>
+              </div>
+            </div>
+          </section>
+        </main>
+      </div>
+
+      <div id="modal-host" class="modal hidden">
+        <div class="modal-card">
+          <h2>Conectar SSH</h2>
+          <label>Nombre <input id="f-name" value="acme-api-dev-us-west" /></label>
+          <label>Host / IP <input id="f-host" value="127.0.0.1" /></label>
+          <label>Puerto <input id="f-port" type="number" value="22" /></label>
+          <label>Usuario <input id="f-user" value="stan" /></label>
+          <label class="check"><input id="f-motd" type="checkbox" checked /> Mostrar MOTD de estado</label>
+          <div class="modal-actions">
+            <button id="modal-cancel" class="btn-ghost">Cancelar</button>
+            <button id="modal-connect" class="btn-primary">Conectar</button>
+          </div>
+        </div>
+      </div>
+    </div>
+    <script type="module" src="/src/main.js"></script>
+  </body>
+</html>
