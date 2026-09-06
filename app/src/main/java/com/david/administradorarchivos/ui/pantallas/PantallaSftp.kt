@@ -161,7 +161,6 @@ fun PantallaSftp() {
                         ExposedDropdownMenu(
                             expanded = expandHosts,
                             onDismissRequest = { expandHosts = false },
-                            containerColor = FondoBarra
                         ) {
                             if (hosts.isEmpty()) {
                                 DropdownMenuItem(
