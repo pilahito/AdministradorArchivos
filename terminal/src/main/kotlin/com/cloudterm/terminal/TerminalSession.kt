@@ -1,15 +1,11 @@
 package com.cloudterm.terminal
 
 /**
- * Sesión de terminal lógica.
+ * Sesión de terminal lógica (contrato JVM multiplataforma).
  *
- * Integración prevista con **NewTermux** / emulador VT (proyecto hermano GPL
- * o binding propio). Este módulo solo define el contrato; no embebe código GPL.
- *
- * ## NewTermux
- * - Render: `TerminalView` / superficie propia
- * - I/O: puente [SshTerminalBridge] ↔ `SshShell` de `:core-ssh`
- * - Colores: tokens de `:ui-shared`
+ * En Android, el render real usa Termux `TerminalEmulator` + `TerminalRenderer`
+ * (`SshTermuxView` en `:app`) puenteado a SSH PTY. Ver
+ * `docs/licenses/TERMUX-NOTICE.md`.
  */
 data class TerminalSession(
     val id: String,
@@ -35,12 +31,10 @@ interface TerminalEmulatorBridge {
 }
 
 /**
- * Stub de emulador — documenta el punto de enganche NewTermux.
+ * Stub JVM — en Android se sustituye por SshTermuxView / Termux.
  */
 class NewTermuxBridgeStub : TerminalEmulatorBridge {
-    override fun attach(session: TerminalSession) {
-        // TODO: enlazar con NewTermux / termux-view (licencia aparte)
-    }
+    override fun attach(session: TerminalSession) = Unit
     override fun write(bytes: ByteArray) = Unit
     override fun resize(columns: Int, rows: Int) = Unit
     override fun detach() = Unit

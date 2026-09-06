@@ -4,6 +4,7 @@ Formato: fecha | version | tipo | descripcion
 
 | Fecha | Version | Tipo | Descripcion |
 |-------|---------|------|-------------|
+| 2026-09-06 | v1.1.0-pro | feat | Terminal Termux VT + puente SSHJ + extra keys + UI mockup |
 | 2026-09-06 | v1.0.0-pro | release | Lanzamiento oficial CloudTerm Pro |
 | 2026-09-06 | v1.0.0-pro | docs | Capturas por SO: Android, Windows, Linux |
 | 2026-09-06 | v1.0.0-pro | ui | Pantallas alineadas a mockups (neon ES) |

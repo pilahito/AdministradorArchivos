@@ -1,0 +1,21 @@
+CloudTerm Pro — avisos de terceros
+=================================
+
+Este proyecto incluye o enlaza componentes con las siguientes licencias.
+
+Termux terminal-emulator / terminal-view
+---------------------------------------
+Copyright (c) Termux developers and contributors
+Licencia: GNU General Public License v3.0 (o posterior)
+Origen: https://github.com/termux/termux-app
+Artefactos Maven (JitPack):
+  - com.termux.termux-app:terminal-emulator:0.118.0
+  - com.termux.termux-app:terminal-view:0.118.0
+
+CloudTerm Pro está licenciado bajo GPL-3.0-or-later para poder enlazar
+estos componentes. Ver LICENSE.
+
+SSHJ (com.hierynomus:sshj) — Apache License 2.0
+JSch (com.github.mwiede:jsch) — BSD-style / Apache-compatible
+
+No se incluye código ni assets propietarios de Termius.
