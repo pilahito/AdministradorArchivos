@@ -79,6 +79,23 @@ flowchart TB
 
 ## Build
 
+## Escritorio Windows + Linux (Tauri 2)
+
+Cliente nativo en `app-desktop/` (UI Dark Neon, xterm.js, SSH vía OpenSSH/PTY).
+
+```bash
+cd app-desktop
+npm install
+npm run tauri dev
+npm run tauri build
+```
+
+Ejecutable: `app-desktop/src-tauri/target/release/cloudterm-pro.exe`  
+Bundles: Windows NSIS/MSI; Linux deb + AppImage (Ubuntu/Arch/Fedora). Stub AUR: app-desktop/packaging/aur/.
+
+Ver [app-desktop/README.md](app-desktop/README.md).
+
+
 ### Android (APK)
 
 ```bash
@@ -92,6 +109,14 @@ flowchart TB
 ./gradlew :core-ssh:compileKotlin :vault:compileKotlin :sync-providers:compileKotlin
 ./gradlew :cloud-sync:compileKotlin :terminal:compileKotlin :ui-shared:compileKotlin
 ```
+
+### Roadmap binarios
+
+| Artefacto | Estado |
+|-----------|--------|
+| APK Android | CI actual (`compilar-apk.yml` / `android.yml`) |
+| EXE/MSI Windows | Tauri 2 en `app-desktop/` + CI desktop.yml |
+| deb + AppImage Linux | Tauri 2 (Ubuntu/Arch/Fedora via AppImage) |
 
 Ver [docs/BUILD.md](docs/BUILD.md).
 

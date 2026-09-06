@@ -1,17 +1,25 @@
-# app-desktop — CloudTerm Pro
+# app-desktop — CloudTerm Pro (Windows + Linux / Tauri 2)
 
-Scaffold escritorio (Tauri / Compose Multiplatform). Ver `package.json` y `COMPOSE_MULTIPLATFORM.md`.
+Cliente de escritorio **CloudTerm Pro** (marca propia, open source).
+UI Dark Neon, pestanas Boveda | SFTP | Workspace, xterm.js + OpenSSH/PTY.
 
-## Temas compartidos
+Plataformas: Windows (NSIS/MSI), Ubuntu (deb+AppImage), Arch/Fedora (AppImage).
 
-Windows y Linux **comparten** los tokens de `:ui-shared` (`CloudTermThemes`):
+## Requisitos
+- Node 18+, Rust, OpenSSH
+- Windows: Build Tools + WebView2
+- Linux: scripts/install-linux-deps.sh
 
-- Dark Cyan Neon (mockup: navy `#0A1628`, cyan `#00E5FF`, neon `#39FF14`)
-- Dracula, Solarized Light, Cyberpunk
 
-La UI desktop debe importar paletas desde `ui-shared` (no duplicar hex en Tauri/CMP).
+## Mas info
+Bundles Win+Linux documentados en CI y packaging/aur.
 
-## Estado
+## Instalar
+- Ubuntu/Debian: archivo .deb o AppImage del release/CI
+- Arch: AppImage; stub AUR en packaging/aur (cloudterm-pro-bin)
+- Fedora: AppImage
 
-Scaffold que **compila** el lado de configuración; aún no produce binario en CI.
-Roadmap: sesiones SSH, terminal, EXE/DEB alineados con la UI Android.
+## CI
+Matriz GitHub Actions: windows-latest y ubuntu-22.04
+
+UI en espanol. Tema CloudTerm Dark Neon (#0A1628 / #00E5FF / #39FF14).

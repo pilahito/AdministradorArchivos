@@ -1,0 +1,20 @@
+# Maintainer: CloudTerm Pro contributors
+# Stub PKGBUILD — actualizar pkgver/sha256sums/URL antes de publicar.
+pkgname=cloudterm-pro-bin
+pkgver=1.1.0
+pkgrel=1
+pkgdesc="CloudTerm Pro — cliente SSH/SFTP de escritorio (AppImage)"
+arch=('x86_64')
+url="https://github.com/pilahito/AdministradorArchivos"
+license=('custom')
+depends=('fuse2' 'openssh')
+provides=('cloudterm-pro')
+conflicts=('cloudterm-pro')
+options=(!strip)
+source=("CloudTerm_Pro-${pkgver}.AppImage::https://github.com/pilahito/AdministradorArchivos/releases/download/v${pkgver}/CloudTerm_Pro_${pkgver}_amd64.AppImage")
+sha256sums=('SKIP')
+
+package() {
+  install -Dm755 "CloudTerm_Pro-${pkgver}.AppImage" \
+    "${pkgdir}/usr/bin/cloudterm-pro"
+}
