@@ -75,7 +75,7 @@ flowchart TB
 
 ## Build
 
-## Windows (escritorio Tauri 2)
+## Escritorio Windows + Linux (Tauri 2)
 
 Cliente nativo en `app-desktop/` (UI Dark Neon, xterm.js, SSH vía OpenSSH/PTY).
 
@@ -87,7 +87,7 @@ npm run tauri build
 ```
 
 Ejecutable: `app-desktop/src-tauri/target/release/cloudterm-pro.exe`  
-Instaladores: `app-desktop/src-tauri/target/release/bundle/` (NSIS / MSI).
+Bundles: Windows NSIS/MSI; Linux deb + AppImage (Ubuntu/Arch/Fedora). Stub AUR: app-desktop/packaging/aur/.
 
 Ver [app-desktop/README.md](app-desktop/README.md).
 
@@ -111,8 +111,8 @@ Ver [app-desktop/README.md](app-desktop/README.md).
 | Artefacto | Estado |
 |-----------|--------|
 | APK Android | CI actual (`compilar-apk.yml` / `android.yml`) |
-| EXE escritorio | Tauri 2 en `app-desktop/` (Windows EXE/MSI) |
-| DEB Linux | Workflow stub `deb.yml` |
+| EXE/MSI Windows | Tauri 2 en `app-desktop/` + CI desktop.yml |
+| deb + AppImage Linux | Tauri 2 (Ubuntu/Arch/Fedora via AppImage) |
 
 Ver [docs/BUILD.md](docs/BUILD.md).
 

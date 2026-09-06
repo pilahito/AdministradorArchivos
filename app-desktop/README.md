@@ -1,54 +1,25 @@
-# app-desktop — CloudTerm Pro (Windows / Tauri 2)
+# app-desktop — CloudTerm Pro (Windows + Linux / Tauri 2)
 
-Cliente de escritorio **CloudTerm Pro** (marca propia, open source). UI oscura neón,
-pestañas Bóveda | SFTP | Workspace, terminal real con **xterm.js** y sesiones SSH vía
-PTY + cliente OpenSSH del sistema.
+Cliente de escritorio **CloudTerm Pro** (marca propia, open source).
+UI Dark Neon, pestanas Boveda | SFTP | Workspace, xterm.js + OpenSSH/PTY.
+
+Plataformas: Windows (NSIS/MSI), Ubuntu (deb+AppImage), Arch/Fedora (AppImage).
 
 ## Requisitos
+- Node 18+, Rust, OpenSSH
+- Windows: Build Tools + WebView2
+- Linux: scripts/install-linux-deps.sh
 
-- Node.js 18+
-- Rust stable + Microsoft C++ Build Tools (Windows)
-- WebView2 (Windows 10/11)
-- OpenSSH Client (recomendado)
 
-## Desarrollo
+## Mas info
+Bundles Win+Linux documentados en CI y packaging/aur.
 
-```bash
-cd app-desktop
-npm install
-npm run tauri dev
-```
+## Instalar
+- Ubuntu/Debian: archivo .deb o AppImage del release/CI
+- Arch: AppImage; stub AUR en packaging/aur (cloudterm-pro-bin)
+- Fedora: AppImage
 
-## Build Windows (EXE / MSI)
+## CI
+Matriz GitHub Actions: windows-latest y ubuntu-22.04
 
-```bash
-cd app-desktop
-npm install
-npm run tauri build
-```
-
-Artefactos típicos:
-
-- `src-tauri/target/release/cloudterm-pro.exe`
-- `src-tauri/target/release/bundle/nsis/*.exe`
-- `src-tauri/target/release/bundle/msi/*.msi`
-
-### Cómo ejecutar el .exe
-
-1. Tras el build, abre `src-tauri/target/release/`.
-2. Ejecuta `cloudterm-pro.exe` (portable) o instala el `.msi` / NSIS.
-3. Workspace → host → Conectar (OpenSSH en PATH).
-
-## Temas
-
-- **CloudTerm Dark Neon** (`#0A1628`, `#00E5FF`, `#39FF14`) — por defecto
-- Dracula / Solarized — stubs en la barra lateral
-
-## Idioma
-
-Interfaz por defecto en **español**.
-
-## Notas
-
-- MOTD de estado opcional al conectar.
-- Sin marcas ni assets de terceros comerciales.
+UI en espanol. Tema CloudTerm Dark Neon (#0A1628 / #00E5FF / #39FF14).

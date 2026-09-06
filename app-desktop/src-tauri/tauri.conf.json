@@ -19,7 +19,8 @@
         "minHeight": 600,
         "resizable": true,
         "decorations": true,
-        "backgroundColor": "#0A1628"
+        "backgroundColor": "#0A1628",
+        "label": "main"
       }
     ],
     "security": {
@@ -30,7 +31,9 @@
     "active": true,
     "targets": [
       "nsis",
-      "msi"
+      "msi",
+      "deb",
+      "appimage"
     ],
     "icon": [
       "icons/32x32.png",
@@ -44,8 +47,19 @@
       "digestAlgorithm": "sha256",
       "timestampUrl": ""
     },
-    "shortDescription": "CloudTerm Pro SSH client",
-    "longDescription": "Cliente SSH/SFTP open source CloudTerm Pro para Windows."
+    "shortDescription": "CloudTerm Pro SSH/SFTP client",
+    "longDescription": "Cliente SSH/SFTP open source CloudTerm Pro para Windows y Linux (Ubuntu, Arch, Fedora). Interfaz Dark Neon, terminal xterm.js y sesiones via OpenSSH.",
+    "linux": {
+      "deb": {
+        "depends": [
+          "openssh-client"
+        ]
+      },
+      "appimage": {
+        "bundleMediaFramework": false
+      }
+    },
+    "category": "DeveloperTool"
   },
   "plugins": {}
 }
