@@ -3,11 +3,6 @@
 ## v1.1.0-pro — Terminal Termux + UI mockup — 2026-09-06
 - Android drawer IA (Hosts, Terminales, SFTP, Reenvio de puertos, Snippets, Llavero/Boveda, Historial, Known hosts, Temas, Ajustes, Ayuda) + FAB + empty SFTP host picker
 
-- Terminal real: TerminalEmulator + TerminalRenderer (Termux 0.118 via JitPack) en AndroidView (SshTermuxView)
-- Puente SSH PTY: ClienteSshj.abrirShell() <-> emulador (bytes stdin/stdout)
-- Extra keys: Alt, Ctrl, Esc, Tab, flechas
-- UI glass dark navy / cyan #00E5FF / neon #39FF14; bottom nav Hosts|Terminal|SFTP|Boveda|Ajustes
-- NOTICE GPL Termux en docs/licenses/TERMUX-NOTICE.md
 ## v1.0.0-pro — CloudTerm Pro (lanzamiento oficial) — 2026-09-06
 
 Primera publicacion oficial de **CloudTerm Pro** (evolucion de CyberTerm).
