@@ -1,29 +1,7 @@
 # Historial de versiones
 
-## v1.2.0-pro -- Desktop UI Win/Linux + Android drawer -- 2026-09-06
-
-### Registros de mejora
-
-| Area | Mejora |
-|------|--------|
-| Desktop UI | Drawer espanol alineado a Android: Hosts, Terminales, SFTP, Reenvio de puertos, Snippets, Llavero/Boveda, Historial, Known hosts, Temas, Ajustes, Ayuda |
-| Tema | Charcoal + cyan + neon green; FAB verde; item drawer seleccionado en verde |
-| Branding | Solo CloudTerm Pro (sin marcas de terceros) |
-| Version | app-desktop 1.2.0-pro (Tauri/Cargo 1.2.0) |
-| CI Desktop | Fix `tauri build build` (quitar args duplicados); jobs Windows (nsis/msi) + Linux (deb/appimage) |
-
-## v1.1.0-pro — Windows desktop Tauri 2 — 2026-09-06
-
-### Registros de mejora
-
-| Area | Mejora |
-|------|--------|
-| Desktop Windows | App Tauri 2 real en `app-desktop/` (Rust + Vite + xterm.js) |
-| UI | Tabs Bóveda / SFTP / Workspace, hosts sidebar, sesión `acme-api-dev-us-west`, tema Dark Neon |
-| Terminal | xterm.js + PTY OpenSSH (cliente OpenSSH del sistema) |
-| Temas | CloudTerm Dark Neon + stubs Dracula / Solarized |
-| Empaquetado | build Tauri → EXE portable + NSIS/MSI |
-
+## v1.1.0-pro — Terminal Termux + UI mockup — 2026-09-06
+- Android drawer IA (Hosts, Terminales, SFTP, Reenvio de puertos, Snippets, Llavero/Boveda, Historial, Known hosts, Temas, Ajustes, Ayuda) + FAB + empty SFTP host picker
 
 ## v1.0.0-pro — CloudTerm Pro (lanzamiento oficial) — 2026-09-06
 
@@ -62,7 +40,7 @@ Primera publicacion oficial de **CloudTerm Pro** (evolucion de CyberTerm).
 
 Primera version publica (CyberTerm).
 
-- Interfaz oscura tipo Termius (Hosts, Terminal, SFTP, Ajustes)
+- Interfaz oscura tipo suite remota profesional (Hosts, Terminal, SFTP, Ajustes)
 - Conexion SSH / SFTP con contrasena o clave
 - Google Drive OAuth (Client ID Android)
 - Compilacion automatica del APK en GitHub Actions
